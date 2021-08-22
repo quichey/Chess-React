@@ -6,6 +6,8 @@ import { Rook } from "./pieces/Rook";
 import { Bishop } from "./pieces/Bishop";
 import { Knight } from "./pieces/Knight";
 
+import { rowColToBoardIdx, idToCell } from "../util/SquareUtil";
+
 export const Board = () => {
   const col = new Array(8);
   col.fill(80);
@@ -60,7 +62,7 @@ export const Board = () => {
           boardPieceId = "knight-";
         }
       }
-      boardPieceId += color;
+      boardPieceId && (boardPieceId += color);
       divs.push(
         <div
           key={`${idx}-${idx2}`}
@@ -75,7 +77,7 @@ export const Board = () => {
           {piece}
         </div>
       );
-      initialBoard[idx * 8 + idx2] = boardPieceId;
+      initialBoard[rowColToBoardIdx(idx, idx2)] = boardPieceId;
     });
   });
 
@@ -96,8 +98,23 @@ export const Board = () => {
       var pieceEl = document.getElementById(dragId);
       ev.target.appendChild(pieceEl);
       pieceEl && (pieceEl.id = dropCell);
+
+      var enemyKilled = hasEnemyPiece(dragId, dropCell);
+      if (enemyKilled) {
+        //killEnemyPiece(dropCell, board)
+        console.log("Killed: " + enemyKilled);
+      }
     }
   }
+
+  const hasEnemyPiece = (dragPieceId: string, dropCell: string) => {
+    const dragColor = dragPieceId.split("-")[2];
+    const [row, col] = idToCell(dropCell);
+    const boardIdx: number = rowColToBoardIdx(row, col);
+    const dropPiece = board[boardIdx];
+    const dropColor = dropPiece.split("-")[1];
+    return dragColor != dropColor ? dropPiece : false;
+  };
   /*
   const divs: React.ReactNode[] = [];
 
