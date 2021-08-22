@@ -6,7 +6,15 @@ import { Rook } from "./pieces/Rook";
 import { Bishop } from "./pieces/Bishop";
 import { Knight } from "./pieces/Knight";
 
-import { rowColToBoardIdx, idToCell } from "../util/SquareUtil";
+import {
+  DivId,
+  PieceDivId,
+  BoardPieceId,
+  rowColToBoardIdx,
+  idToCell,
+  RowIdx,
+  ColIdx,
+} from "../util/SquareUtil";
 
 export const Board = () => {
   const col = new Array(8);
@@ -35,34 +43,33 @@ export const Board = () => {
       let piece: JSX.Element | "" = "";
       let color: "White" | "Black" = idx > 3 ? "White" : "Black";
       var pieceId = `${idx}-${idx2}-${color}`;
-      let boardPieceId = "";
+      let boardPieceId: BoardPieceId = "";
       if (idx === 1 || idx === 6) {
         piece = <Pawn pieceId={pieceId} />;
-        boardPieceId = "pawn-";
+        boardPieceId = { piece: "Pawn", player: color };
       } else if (idx === 0 || idx === 7) {
         //set pieces in first and last rows
         if (idx2 === 3) {
           piece = <King pieceId={pieceId} />;
-          boardPieceId = "king-";
+          boardPieceId = { piece: "King", player: color };
         }
         if (idx2 === 4) {
           piece = <Queen pieceId={pieceId} />;
-          boardPieceId = "queen-";
+          boardPieceId = { piece: "Queen", player: color };
         }
         if (idx2 === 0 || idx2 === 7) {
           piece = <Rook pieceId={pieceId} />;
-          boardPieceId = "rook-";
+          boardPieceId = { piece: "Rook", player: color };
         }
         if (idx2 === 1 || idx2 === 6) {
           piece = <Bishop pieceId={pieceId} />;
-          boardPieceId = "bishop-";
+          boardPieceId = { piece: "Bishop", player: color };
         }
         if (idx2 === 2 || idx2 === 5) {
           piece = <Knight pieceId={pieceId} />;
-          boardPieceId = "knight-";
+          boardPieceId = { piece: "Knight", player: color };
         }
       }
-      boardPieceId && (boardPieceId += color);
       divs.push(
         <div
           key={`${idx}-${idx2}`}
@@ -77,7 +84,8 @@ export const Board = () => {
           {piece}
         </div>
       );
-      initialBoard[rowColToBoardIdx(idx, idx2)] = boardPieceId;
+      initialBoard[rowColToBoardIdx(idx as RowIdx, idx2 as ColIdx)] =
+        boardPieceId;
     });
   });
 
@@ -96,24 +104,37 @@ export const Board = () => {
     var dropCell = ev.target.id.slice(0, 3);
     if (validSquares.includes(dropCell)) {
       var pieceEl = document.getElementById(dragId);
-      ev.target.appendChild(pieceEl);
-      pieceEl && (pieceEl.id = dropCell);
-
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
-        //killEnemyPiece(dropCell, board)
-        console.log("Killed: " + enemyKilled);
+        var enemyParentDiv = ev.target.parentElement;
+        killPiece(enemyKilled, dropCell);
+        //console.log("Killed: " + enemyKilled);
+        //place piece on new square
+        enemyParentDiv.appendChild(pieceEl);
+        pieceEl && (pieceEl.id = dropCell);
+      } else {
+        //place piece on new square
+        ev.target.appendChild(pieceEl);
+        pieceEl && (pieceEl.id = dropCell);
       }
     }
   }
 
-  const hasEnemyPiece = (dragPieceId: string, dropCell: string) => {
+  const hasEnemyPiece = (dragPieceId: string, dropCell: DivId) => {
     const dragColor = dragPieceId.split("-")[2];
     const [row, col] = idToCell(dropCell);
     const boardIdx: number = rowColToBoardIdx(row, col);
-    const dropPiece = board[boardIdx];
-    const dropColor = dropPiece.split("-")[1];
-    return dragColor != dropColor ? dropPiece : false;
+    const dropPiece: BoardPieceId = board[boardIdx];
+    const dropColor = dropPiece && dropPiece.player;
+    return dragColor !== dropColor ? dropPiece : false;
+  };
+
+  const killPiece = (boardPieceId: BoardPieceId, dropCellId: DivId) => {
+    if (boardPieceId) {
+      const pieceId: PieceDivId = `${dropCellId}-${boardPieceId.player}`;
+      const pieceEl = document.getElementById(pieceId);
+      pieceEl && pieceEl.remove();
+    }
   };
   /*
   const divs: React.ReactNode[] = [];
