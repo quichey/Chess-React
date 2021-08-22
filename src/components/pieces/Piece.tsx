@@ -52,8 +52,8 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
   return (
     //<div style={{ width: 100, height: 100 }}>
     <img
-      width="100px"
-      height="100px"
+      width="80px"
+      height="80px"
       id={pieceId}
       src={svgs[`${pieceType}_${color}`]}
       alt="test"

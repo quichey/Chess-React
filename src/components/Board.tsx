@@ -6,11 +6,11 @@ import { Rook } from "./pieces/Rook";
 import { Bishop } from "./pieces/Bishop";
 import { Knight } from "./pieces/Knight";
 
-export const BattleGrid = () => {
+export const Board = () => {
   const col = new Array(8);
-  col.fill(100);
+  col.fill(80);
   const row = new Array(8);
-  row.fill(100);
+  row.fill(80);
   const gameBoardCss = {
     display: "grid",
     gridTemplateColumns: col.map((size) => `${size}px`).join(" "),
@@ -26,43 +26,56 @@ export const BattleGrid = () => {
   };
 
   const initialBoard = Array(64).fill("");
+  const divs: React.ReactNode[] = [];
 
   row.forEach((el, idx) => {
     col.forEach((el2, idx2) => {
       let piece: JSX.Element | "" = "";
       let color: "White" | "Black" = idx > 3 ? "White" : "Black";
       var pieceId = `${idx}-${idx2}-${color}`;
+      let boardPieceId = "";
       if (idx === 1 || idx === 6) {
         piece = <Pawn pieceId={pieceId} />;
+        boardPieceId = "pawn-";
       } else if (idx === 0 || idx === 7) {
         //set pieces in first and last rows
         if (idx2 === 3) {
           piece = <King pieceId={pieceId} />;
+          boardPieceId = "king-";
         }
         if (idx2 === 4) {
           piece = <Queen pieceId={pieceId} />;
+          boardPieceId = "queen-";
         }
         if (idx2 === 0 || idx2 === 7) {
           piece = <Rook pieceId={pieceId} />;
+          boardPieceId = "rook-";
         }
         if (idx2 === 1 || idx2 === 6) {
           piece = <Bishop pieceId={pieceId} />;
+          boardPieceId = "bishop-";
         }
         if (idx2 === 2 || idx2 === 5) {
           piece = <Knight pieceId={pieceId} />;
+          boardPieceId = "knight-";
         }
       }
-      initialBoard[idx * 8 + idx2] = (
+      boardPieceId += color;
+      divs.push(
         <div
           key={`${idx}-${idx2}`}
           id={`${idx}-${idx2}-square`}
-          style={boxCss}
+          style={{
+            ...boxCss,
+            backgroundColor: (idx + idx2) % 2 === 1 ? "#ffe4b5" : "#8b4513",
+          }}
           onDrop={drop}
           onDragOver={allowDrop}
         >
           {piece}
         </div>
       );
+      initialBoard[idx * 8 + idx2] = boardPieceId;
     });
   });
 
@@ -133,7 +146,7 @@ export const BattleGrid = () => {
 
     //}}}>
     <div key={0} style={gameBoardCss}>
-      {board}
+      {divs}
     </div>
     //</boardContext.Provider>
 

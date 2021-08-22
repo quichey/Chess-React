@@ -1,10 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
-import { BattleGrid } from './components/battlegrid';
+import logo from "./logo.svg";
+import "./App.css";
+import { Board } from "./components/Board";
 
 function App() {
-  return (
-    true ? <BattleGrid/> :
+  return true ? (
+    <Board />
+  ) : (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -19,7 +20,6 @@ function App() {
         >
           Learn React
         </a>
-        
       </header>
     </div>
   );
