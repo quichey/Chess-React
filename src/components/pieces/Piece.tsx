@@ -1,4 +1,14 @@
 import React from "react";
+
+import { BoardContext } from "../Board";
+import {
+  RowIdx,
+  ColIdx,
+  DivId,
+  PieceDivId,
+  Player,
+  isValidSquareId,
+} from "../../util/SquareUtil";
 import King_Black from "../../util/images/King_Black.svg";
 import Queen_Black from "../../util/images/Queen_Black.svg";
 import Pawn_Black from "../../util/images/Pawn_Black.svg";
@@ -32,19 +42,29 @@ const svgs: any = {
 interface PieceProps {
   pieceType: string;
   pieceId: string;
-  getValidSquares: (row: number, col: number) => string[];
+  getValidSquares: (
+    player: Player,
+    row: RowIdx,
+    col: ColIdx,
+    board: any[]
+  ) => DivId[];
 }
 
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
+  const boardContext = React.useContext(BoardContext);
   const drag = (event: any) => {
     event.dataTransfer.setData("dragId", event.target.id);
-    const [row, col] = event.target.id
-      .split("-")
-      .map((val: string) => Number(val));
-    event.dataTransfer.setData(
-      "validSquares",
-      JSON.stringify(getValidSquares(row, col))
-    );
+    const pieceId: PieceDivId = event.target.id.split("-");
+    const row = Number(pieceId[0]) as RowIdx;
+    const col = Number(pieceId[1]) as RowIdx;
+    const player: Player = pieceId[2] as Player;
+    var validSquares = getValidSquares(
+      player,
+      row,
+      col,
+      boardContext.board
+    ).filter(isValidSquareId);
+    event.dataTransfer.setData("validSquares", JSON.stringify(validSquares));
   };
 
   const color = pieceId && pieceId.split("-")[2];

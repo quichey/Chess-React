@@ -1,6 +1,6 @@
 export type RowIdx = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type ColIdx = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-export type Player = "White" | "Black";
+export type Player = "White" | "Black" | "";
 export type Piece = "King" | "Queen" | "Pawn" | "Rook" | "Bishop" | "Knight";
 
 export type DivId = `${RowIdx}-${ColIdx}`;
@@ -24,4 +24,14 @@ export const cellToId = (cell: Cell) => {
 
 export const rowColToBoardIdx = (row: RowIdx, col: ColIdx) => {
   return row * 8 + col;
+};
+
+export const divIdToBoardIdx = (id: DivId) => {
+  const [row, col] = idToCell(id);
+  return rowColToBoardIdx(row, col);
+};
+
+export const isValidSquareId = (id: DivId) => {
+  var cell = idToCell(id);
+  return 0 <= cell[0] && cell[0] <= 7 && 0 <= cell[1] && cell[1] <= 7;
 };

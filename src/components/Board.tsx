@@ -11,10 +11,15 @@ import {
   PieceDivId,
   BoardPieceId,
   rowColToBoardIdx,
+  divIdToBoardIdx,
   idToCell,
   RowIdx,
   ColIdx,
 } from "../util/SquareUtil";
+
+export const BoardContext = React.createContext({ board: [] as any[] });
+//const BoardContext = boardContext.Consumer;
+//export { boardContext };
 
 export const Board = () => {
   const col = new Array(8);
@@ -104,6 +109,7 @@ export const Board = () => {
     var dropCell = ev.target.id.slice(0, 3);
     if (validSquares.includes(dropCell)) {
       var pieceEl = document.getElementById(dragId);
+      var draggedPlayer = dragId.split("-")[3];
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
         var enemyParentDiv = ev.target.parentElement;
@@ -112,10 +118,28 @@ export const Board = () => {
         //place piece on new square
         enemyParentDiv.appendChild(pieceEl);
         pieceEl && (pieceEl.id = dropCell);
+        setBoard((prevBoard) => {
+          var newBoard = prevBoard;
+          newBoard[divIdToBoardIdx(dragId)] = "";
+          newBoard[divIdToBoardIdx(dropCell)] = {
+            piece: "Pawn",
+            player: draggedPlayer,
+          };
+          return newBoard;
+        });
       } else {
         //place piece on new square
         ev.target.appendChild(pieceEl);
         pieceEl && (pieceEl.id = dropCell);
+        setBoard((prevBoard) => {
+          var newBoard = prevBoard;
+          newBoard[divIdToBoardIdx(dragId)] = "";
+          newBoard[divIdToBoardIdx(dropCell)] = {
+            piece: "Pawn",
+            player: draggedPlayer,
+          };
+          return newBoard;
+        });
       }
     }
   }
@@ -183,10 +207,11 @@ export const Board = () => {
     //<boardContext.Provider value={{updatePiecePos: () => {
 
     //}}}>
-    <div key={0} style={gameBoardCss}>
-      {divs}
-    </div>
-    //</boardContext.Provider>
+    <BoardContext.Provider value={{ board: board }}>
+      <div key={0} style={gameBoardCss}>
+        {divs}
+      </div>
+    </BoardContext.Provider>
 
     /*
       {true ? (

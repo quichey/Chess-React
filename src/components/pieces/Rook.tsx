@@ -10,8 +10,8 @@ export const Rook = ({ pieceId }: RookProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Rook"
-      getValidSquares={(row, col) => {
-        return getStraightMoves(8, row, col);
+      getValidSquares={(player, row, col, board) => {
+        return getStraightMoves(player, 8, row, col, board);
       }}
     />
   );

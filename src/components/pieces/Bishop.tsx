@@ -10,8 +10,8 @@ export const Bishop = ({ pieceId }: BishopProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Bishop"
-      getValidSquares={(row, col) => {
-        return getDiagonalMoves(8, row, col);
+      getValidSquares={(player, row, col, board) => {
+        return getDiagonalMoves(player, 8, row, col, board);
       }}
     />
   );

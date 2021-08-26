@@ -1,3 +1,4 @@
+import { DivId } from "../../util/SquareUtil";
 import { Piece } from "./Piece";
 
 type PawnProp = {
@@ -11,11 +12,11 @@ export const Pawn = ({ pieceId }: PawnProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Pawn"
-      getValidSquares={(row, col) => {
+      getValidSquares={(player, row, col, board) => {
         var validCols = [0, 1, 2, 3, 4, 5, 6, 7];
         var direction = color === "White" ? -1 : 1;
         return validCols.map((validCol) => {
-          return `${row + direction}-${validCol}`;
+          return `${row + direction}-${validCol}` as DivId;
         });
       }}
     />

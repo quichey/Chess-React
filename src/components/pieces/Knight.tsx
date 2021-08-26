@@ -1,4 +1,5 @@
 import { Piece } from "./Piece";
+import { DivId } from "../../util/SquareUtil";
 
 type KnightProp = {
   pieceId: string;
@@ -11,7 +12,7 @@ export const Knight = ({ pieceId }: KnightProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Knight"
-      getValidSquares={(row, col) => {
+      getValidSquares={(player, row, col, board) => {
         var validSquares: string[] = [];
         validChanges.forEach((rowChange) => {
           validChanges.forEach((colChange) => {
@@ -20,7 +21,7 @@ export const Knight = ({ pieceId }: KnightProp) => {
             }
           });
         });
-        return validSquares;
+        return validSquares as DivId[];
       }}
     />
   );

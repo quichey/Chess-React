@@ -10,8 +10,8 @@ export const Queen = ({ pieceId }: QueenProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Queen"
-      getValidSquares={(row, col) => {
-        return getMultiDirMoves(8, row, col);
+      getValidSquares={(player, row, col, board) => {
+        return getMultiDirMoves(player, 8, row, col, board);
       }}
     />
   );
