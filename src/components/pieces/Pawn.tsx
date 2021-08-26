@@ -1,7 +1,12 @@
 import React from "react";
 
-import { hasAnyPiece } from "../../util/MovesUtil";
-import { DivId, RowIdx } from "../../util/SquareUtil";
+import { hasAnyPiece, hasPlayersPiece } from "../../util/MovesUtil";
+import {
+  RowIdx,
+  ColIdx,
+  DivId,
+  getOppositePlayer,
+} from "../../util/SquareUtil";
 import { Piece } from "./Piece";
 
 type PawnProp = {
@@ -18,9 +23,10 @@ export const Pawn = ({ pieceId }: PawnProp) => {
       getValidSquares={(player, row, col, board) => {
         var direction = color === "White" ? -1 : 1;
         var validSquares: DivId[] = [];
-        var hasAPiece = hasAnyPiece((row + direction) as RowIdx, col, board);
+        var nextRow = (row + direction) as RowIdx;
+        var hasAPiece = hasAnyPiece(nextRow, col, board);
         if (!hasAPiece) {
-          validSquares.push(`${row + direction}-${col}` as DivId);
+          validSquares.push(`${nextRow}-${col}` as DivId);
           if (
             row === origRow &&
             !hasAnyPiece((row + direction * 2) as RowIdx, col, board)
@@ -28,6 +34,14 @@ export const Pawn = ({ pieceId }: PawnProp) => {
             validSquares.push(`${row + direction * 2}-${col}` as DivId);
           }
         }
+        // check diagonals for enemy piece
+        var diagonalCols: ColIdx[] = [(col + 1) as ColIdx, (col - 1) as ColIdx];
+        var oppositePlayer = getOppositePlayer(player);
+        diagonalCols.forEach((newCol) => {
+          if (hasPlayersPiece(oppositePlayer, nextRow, newCol, board)) {
+            validSquares.push(`${nextRow}-${newCol}`);
+          }
+        });
         return validSquares;
       }}
     />
