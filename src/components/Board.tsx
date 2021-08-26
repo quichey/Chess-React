@@ -109,13 +109,15 @@ export const Board = () => {
     var dropCell = ev.target.id.slice(0, 3);
     if (validSquares.includes(dropCell)) {
       var pieceEl = document.getElementById(dragId);
-      var draggedPlayer = dragId.split("-")[3];
+      var draggedPlayer = dragId.split("-")[2];
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
         var enemyParentDiv = ev.target.parentElement;
         killPiece(enemyKilled, dropCell);
         //console.log("Killed: " + enemyKilled);
         //place piece on new square
+        placePiece(enemyParentDiv, pieceEl, dropCell, dragId, draggedPlayer);
+        /*
         enemyParentDiv.appendChild(pieceEl);
         pieceEl && (pieceEl.id = dropCell);
         setBoard((prevBoard) => {
@@ -127,8 +129,11 @@ export const Board = () => {
           };
           return newBoard;
         });
+        */
       } else {
         //place piece on new square
+        placePiece(ev.target, pieceEl, dropCell, dragId, draggedPlayer);
+        /*
         ev.target.appendChild(pieceEl);
         pieceEl && (pieceEl.id = dropCell);
         setBoard((prevBoard) => {
@@ -140,9 +145,30 @@ export const Board = () => {
           };
           return newBoard;
         });
+        */
       }
     }
   }
+
+  const placePiece = (
+    squareDiv: any,
+    pieceEl: any,
+    dropCell: any,
+    dragId: any,
+    draggedPlayer: any
+  ) => {
+    squareDiv.appendChild(pieceEl);
+    pieceEl && (pieceEl.id = `${dropCell}-${draggedPlayer}`);
+    setBoard((prevBoard) => {
+      var newBoard = prevBoard;
+      newBoard[divIdToBoardIdx(dragId)] = "";
+      newBoard[divIdToBoardIdx(dropCell)] = {
+        piece: "Pawn",
+        player: draggedPlayer,
+      };
+      return newBoard;
+    });
+  };
 
   const hasEnemyPiece = (dragPieceId: string, dropCell: DivId) => {
     const dragColor = dragPieceId.split("-")[2];

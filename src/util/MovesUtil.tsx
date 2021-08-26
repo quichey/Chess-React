@@ -65,13 +65,45 @@ export const getDiagonalMoves = (
   board: any[]
 ) => {
   var validSquares: string[] = [];
+  var hasPieceTopRight = false;
+  var hasPieceTopLeft = false;
+  var hasPieceBottomRight = false;
+  var hasPieceBottomLeft = false;
   for (var i = 1; i <= range; i++) {
     var newRows = [origRow + i, origRow - i];
     var newCols = [origCol + i, origCol - i];
 
     newRows.forEach((newRow) => {
       newCols.forEach((newCol) => {
-        validSquares.push(`${newRow}-${newCol}`);
+        var isTopRight = newRow === origRow - i && newCol === origCol + i;
+        var isTopLeft = newRow === origRow - i && newCol === origCol - i;
+        var isBottomRight = newRow === origRow + i && newCol === origCol + i;
+        var isBottomLeft = newRow === origRow + i && newCol === origCol - i;
+        var hasOwnPiece = hasPlayersPiece(
+          player,
+          newRow as RowIdx,
+          newCol as ColIdx,
+          board
+        );
+        var isValid = !hasOwnPiece;
+
+        if (isTopRight) {
+          hasPieceTopRight = hasPieceTopRight || hasOwnPiece;
+          isValid = !hasPieceTopRight;
+        }
+        if (isTopLeft) {
+          hasPieceTopLeft = hasPieceTopLeft || hasOwnPiece;
+          isValid = !hasPieceTopLeft;
+        }
+        if (isBottomRight) {
+          hasPieceBottomRight = hasPieceBottomRight || hasOwnPiece;
+          isValid = !hasPieceBottomRight;
+        }
+        if (isBottomLeft) {
+          hasPieceBottomLeft = hasPieceBottomLeft || hasOwnPiece;
+          isValid = !hasPieceBottomLeft;
+        }
+        isValid && validSquares.push(`${newRow}-${newCol}`);
       });
     });
   }
