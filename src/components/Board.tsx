@@ -7,6 +7,7 @@ import { Bishop } from "./pieces/Bishop";
 import { Knight } from "./pieces/Knight";
 
 import {
+  Player,
   DivId,
   PieceDivId,
   BoardPieceId,
@@ -15,13 +16,19 @@ import {
   idToCell,
   RowIdx,
   ColIdx,
+  getOppositePlayer,
 } from "../util/SquareUtil";
+import { isInCheck } from "../util/MovesUtil";
 
-export const BoardContext = React.createContext({ board: [] as any[] });
+export const BoardContext = React.createContext({
+  board: [] as any[],
+  currPlayer: "White" as Player,
+});
 //const BoardContext = boardContext.Consumer;
 //export { boardContext };
 
 export const Board = () => {
+  const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
   const col = new Array(8);
   col.fill(80);
   const row = new Array(8);
@@ -110,6 +117,9 @@ export const Board = () => {
     if (validSquares.includes(dropCell)) {
       var pieceEl = document.getElementById(dragId);
       var draggedPlayer = dragId.split("-")[2];
+      if (currPlayer !== draggedPlayer) {
+        return;
+      }
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
         var enemyParentDiv = ev.target.parentElement;
@@ -147,6 +157,7 @@ export const Board = () => {
         });
         */
       }
+      setCurrPlayer(getOppositePlayer(currPlayer));
     }
   }
 
@@ -157,13 +168,14 @@ export const Board = () => {
     dragId: any,
     draggedPlayer: any
   ) => {
+    const dragPieceType = dragId.split("-")[3];
     squareDiv.appendChild(pieceEl);
     pieceEl && (pieceEl.id = `${dropCell}-${draggedPlayer}`);
     setBoard((prevBoard) => {
       var newBoard = prevBoard;
       newBoard[divIdToBoardIdx(dragId)] = "";
       newBoard[divIdToBoardIdx(dropCell)] = {
-        piece: "Pawn",
+        piece: dragPieceType,
         player: draggedPlayer,
       };
       return newBoard;
@@ -233,10 +245,11 @@ export const Board = () => {
     //<boardContext.Provider value={{updatePiecePos: () => {
 
     //}}}>
-    <BoardContext.Provider value={{ board: board }}>
+    <BoardContext.Provider value={{ board: board, currPlayer: currPlayer }}>
       <div key={0} style={gameBoardCss}>
         {divs}
       </div>
+      {isInCheck(currPlayer, board) ? <div>{currPlayer} IS IN CHECK</div> : ""}
     </BoardContext.Provider>
 
     /*

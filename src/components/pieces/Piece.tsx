@@ -74,7 +74,7 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
     <img
       width="80px"
       height="80px"
-      id={pieceId}
+      id={`${pieceId}-${pieceType}`}
       src={svgs[`${pieceType}_${color}`]}
       alt="test"
       onDragStart={drag}

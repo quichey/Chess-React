@@ -1,3 +1,4 @@
+import { getValidSquaresBishop } from "../components/pieces/Bishop";
 import {
   RowIdx,
   ColIdx,
@@ -6,6 +7,7 @@ import {
   BoardPieceId,
   rowColToBoardIdx,
   getOppositePlayer,
+  boardIdxToCell,
 } from "./SquareUtil";
 
 export const getStraightMoves = (
@@ -195,4 +197,49 @@ export const hasAnyPiece = (
   const boardId: BoardPieceId = board[boardIdx];
   const squarePlayer: Player = boardId && boardId.player;
   return squarePlayer;
+};
+
+export const getPlayerBoardInfo = (player: Player, board: any[]) => {
+  const withIdx = board.map((boardId, idx) => {
+    if (boardId) {
+      return [boardId, idx];
+    } else {
+      return "";
+    }
+  });
+  return withIdx.filter((boardInfo) => {
+    return boardInfo && boardInfo[0].player === player;
+  }) as [BoardPieceId, number][];
+};
+
+export const isInCheck = (currPlayer: Player, board: any[]) => {
+  const oppositePlayer = getOppositePlayer(currPlayer);
+  const enemyBoardInfo: [BoardPieceId, number][] = getPlayerBoardInfo(
+    oppositePlayer,
+    board
+  );
+  let isInCheck = false;
+  //Temp hardcoded king cell
+  const kingCell = "7-3";
+  for (var boardInfoIdx in enemyBoardInfo) {
+    var boardInfo = enemyBoardInfo[boardInfoIdx];
+    var [row, col] = boardIdxToCell(boardInfo[1]);
+    var piece = boardInfo[0] && boardInfo[0].piece;
+    let moveSet: string[] = [];
+    switch (piece) {
+      case "Bishop":
+        moveSet = getValidSquaresBishop(oppositePlayer, row, col, board);
+        break;
+    }
+    for (var moveIdx in moveSet) {
+      if (moveSet[moveIdx] === kingCell) {
+        isInCheck = true;
+        break;
+      }
+    }
+    if (isInCheck) {
+      break;
+    }
+  }
+  return isInCheck;
 };
