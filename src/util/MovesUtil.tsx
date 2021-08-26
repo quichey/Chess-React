@@ -185,3 +185,14 @@ export const hasPlayersPiece = (
   const squarePlayer: Player = boardId && boardId.player;
   return targetPlayer === squarePlayer;
 };
+
+export const hasAnyPiece = (
+  targetRow: RowIdx,
+  targetCol: ColIdx,
+  board: any[]
+) => {
+  const boardIdx: number = rowColToBoardIdx(targetRow, targetCol);
+  const boardId: BoardPieceId = board[boardIdx];
+  const squarePlayer: Player = boardId && boardId.player;
+  return squarePlayer;
+};

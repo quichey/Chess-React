@@ -1,4 +1,7 @@
-import { DivId } from "../../util/SquareUtil";
+import React from "react";
+
+import { hasAnyPiece } from "../../util/MovesUtil";
+import { DivId, RowIdx } from "../../util/SquareUtil";
 import { Piece } from "./Piece";
 
 type PawnProp = {
@@ -6,18 +9,26 @@ type PawnProp = {
 };
 
 export const Pawn = ({ pieceId }: PawnProp) => {
-  //const img = false ? SVG : <img src="http://www.w3.org/2000/svg" alt="PAWN" />;
+  const origRow = pieceId && Number(pieceId.split("-")[0]);
   const color = pieceId && pieceId.split("-")[2];
   return (
     <Piece
       pieceId={pieceId}
       pieceType="Pawn"
       getValidSquares={(player, row, col, board) => {
-        var validCols = [0, 1, 2, 3, 4, 5, 6, 7];
         var direction = color === "White" ? -1 : 1;
-        return validCols.map((validCol) => {
-          return `${row + direction}-${validCol}` as DivId;
-        });
+        var validSquares: DivId[] = [];
+        var hasAPiece = hasAnyPiece((row + direction) as RowIdx, col, board);
+        if (!hasAPiece) {
+          validSquares.push(`${row + direction}-${col}` as DivId);
+          if (
+            row === origRow &&
+            !hasAnyPiece((row + direction * 2) as RowIdx, col, board)
+          ) {
+            validSquares.push(`${row + direction * 2}-${col}` as DivId);
+          }
+        }
+        return validSquares;
       }}
     />
   );
