@@ -5,6 +5,7 @@ import {
   Player,
   BoardPieceId,
   rowColToBoardIdx,
+  getOppositePlayer,
 } from "./SquareUtil";
 
 export const getStraightMoves = (
@@ -19,6 +20,7 @@ export const getStraightMoves = (
   var hasPieceBelow = false;
   var hasPieceRight = false;
   var hasPieceLeft = false;
+  var oppositePlayer = getOppositePlayer(player);
   for (var i = 1; i <= range; i++) {
     var newRows = [];
     if (hasPlayersPiece(player, (origRow + i) as RowIdx, origCol, board)) {
@@ -32,6 +34,17 @@ export const getStraightMoves = (
     }
     if (!hasPieceLeft) {
       newRows.push(origRow - i);
+    }
+    //check opposite player after since first opposite player can be killed
+    if (
+      hasPlayersPiece(oppositePlayer, (origRow + i) as RowIdx, origCol, board)
+    ) {
+      hasPieceRight = true;
+    }
+    if (
+      hasPlayersPiece(oppositePlayer, (origRow - i) as RowIdx, origCol, board)
+    ) {
+      hasPieceLeft = true;
     }
     newRows.forEach((newRow) => {
       validSquares.push(`${newRow}-${origCol}`);
@@ -49,6 +62,17 @@ export const getStraightMoves = (
     }
     if (!hasPieceBelow) {
       newCols.push(origCol - i);
+    }
+    //check opposite player after since first opposite player can be killed
+    if (
+      hasPlayersPiece(oppositePlayer, origRow, (origCol + i) as ColIdx, board)
+    ) {
+      hasPieceAbove = true;
+    }
+    if (
+      hasPlayersPiece(oppositePlayer, origRow, (origCol - i) as ColIdx, board)
+    ) {
+      hasPieceBelow = true;
     }
     newCols.forEach((newCol) => {
       validSquares.push(`${origRow}-${newCol}`);

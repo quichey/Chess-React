@@ -35,3 +35,7 @@ export const isValidSquareId = (id: DivId) => {
   var cell = idToCell(id);
   return 0 <= cell[0] && cell[0] <= 7 && 0 <= cell[1] && cell[1] <= 7;
 };
+
+export const getOppositePlayer = (player: Player) => {
+  return player === "White" ? ("Black" as Player) : ("White" as Player);
+};
