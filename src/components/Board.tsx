@@ -168,11 +168,23 @@ export const Board = () => {
     dragId: any,
     draggedPlayer: any
   ) => {
-    const dragPieceType = dragId.split("-")[3];
     squareDiv.appendChild(pieceEl);
     pieceEl && (pieceEl.id = `${dropCell}-${draggedPlayer}`);
+    var newBoard = board;
+    const dragPieceType =
+      board[divIdToBoardIdx(dragId)] && board[divIdToBoardIdx(dragId)].piece;
+    newBoard[divIdToBoardIdx(dragId)] = "";
+    newBoard[divIdToBoardIdx(dropCell)] = {
+      piece: dragPieceType,
+      player: draggedPlayer,
+    };
+    setBoard(newBoard);
+    /*
     setBoard((prevBoard) => {
       var newBoard = prevBoard;
+      const dragPieceType =
+        prevBoard[divIdToBoardIdx(dragId)] &&
+        prevBoard[divIdToBoardIdx(dragId)].piece;
       newBoard[divIdToBoardIdx(dragId)] = "";
       newBoard[divIdToBoardIdx(dropCell)] = {
         piece: dragPieceType,
@@ -180,6 +192,7 @@ export const Board = () => {
       };
       return newBoard;
     });
+    */
   };
 
   const hasEnemyPiece = (dragPieceId: string, dropCell: DivId) => {

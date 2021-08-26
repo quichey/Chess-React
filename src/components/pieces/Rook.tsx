@@ -1,8 +1,18 @@
 import { Piece } from "./Piece";
 import { getStraightMoves } from "../../util/MovesUtil";
+import { ColIdx, Player, RowIdx } from "../../util/SquareUtil";
 
 type RookProp = {
   pieceId: string;
+};
+
+export const getValidSquaresRook = (
+  player: Player,
+  row: RowIdx,
+  col: ColIdx,
+  board: any[]
+) => {
+  return getStraightMoves(player, 8, row, col, board);
 };
 
 export const Rook = ({ pieceId }: RookProp) => {
@@ -10,9 +20,7 @@ export const Rook = ({ pieceId }: RookProp) => {
     <Piece
       pieceId={pieceId}
       pieceType="Rook"
-      getValidSquares={(player, row, col, board) => {
-        return getStraightMoves(player, 8, row, col, board);
-      }}
+      getValidSquares={getValidSquaresRook}
     />
   );
 };

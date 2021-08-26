@@ -1,4 +1,6 @@
 import { getValidSquaresBishop } from "../components/pieces/Bishop";
+import { getValidSquaresQueen } from "../components/pieces/Queen";
+import { getValidSquaresRook } from "../components/pieces/Rook";
 import {
   RowIdx,
   ColIdx,
@@ -225,12 +227,21 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
     var boardInfo = enemyBoardInfo[boardInfoIdx];
     var [row, col] = boardIdxToCell(boardInfo[1]);
     var piece = boardInfo[0] && boardInfo[0].piece;
+    let getValidSquaresFunc: any = null;
     let moveSet: string[] = [];
     switch (piece) {
+      case "Queen":
+        getValidSquaresFunc = getValidSquaresQueen;
+        break;
+      case "Rook":
+        getValidSquaresFunc = getValidSquaresRook;
+        break;
       case "Bishop":
-        moveSet = getValidSquaresBishop(oppositePlayer, row, col, board);
+        getValidSquaresFunc = getValidSquaresBishop;
         break;
     }
+    getValidSquaresFunc &&
+      (moveSet = getValidSquaresFunc(oppositePlayer, row, col, board));
     for (var moveIdx in moveSet) {
       if (moveSet[moveIdx] === kingCell) {
         isInCheck = true;
