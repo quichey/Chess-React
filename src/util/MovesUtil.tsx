@@ -93,6 +93,7 @@ export const getDiagonalMoves = (
   var hasPieceTopLeft = false;
   var hasPieceBottomRight = false;
   var hasPieceBottomLeft = false;
+  var oppositePlayer = getOppositePlayer(player);
   for (var i = 1; i <= range; i++) {
     var newRows = [origRow + i, origRow - i];
     var newCols = [origCol + i, origCol - i];
@@ -105,6 +106,12 @@ export const getDiagonalMoves = (
         var isBottomLeft = newRow === origRow + i && newCol === origCol - i;
         var hasOwnPiece = hasPlayersPiece(
           player,
+          newRow as RowIdx,
+          newCol as ColIdx,
+          board
+        );
+        var hasOppositePiece = hasPlayersPiece(
+          oppositePlayer,
           newRow as RowIdx,
           newCol as ColIdx,
           board
@@ -128,6 +135,19 @@ export const getDiagonalMoves = (
           isValid = !hasPieceBottomLeft;
         }
         isValid && validSquares.push(`${newRow}-${newCol}`);
+        //check opposite player after since first opposite player can be killed
+        if (isTopRight) {
+          hasPieceTopRight = hasPieceTopRight || hasOppositePiece;
+        }
+        if (isTopLeft) {
+          hasPieceTopLeft = hasPieceTopLeft || hasOppositePiece;
+        }
+        if (isBottomRight) {
+          hasPieceBottomRight = hasPieceBottomRight || hasOppositePiece;
+        }
+        if (isBottomLeft) {
+          hasPieceBottomLeft = hasPieceBottomLeft || hasOppositePiece;
+        }
       });
     });
   }
