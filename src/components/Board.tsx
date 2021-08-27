@@ -138,7 +138,10 @@ export const Board = () => {
     var dragId = ev.dataTransfer.getData("dragId");
     var validSquares = JSON.parse(ev.dataTransfer.getData("validSquares"));
 
-    movePiece(ev.target, dragId, validSquares);
+    var squareEl = ev.target.id.includes("square")
+      ? ev.target
+      : ev.target.parentElement;
+    movePiece(squareEl, dragId, validSquares);
   }
 
   const movePiece = (
@@ -156,7 +159,8 @@ export const Board = () => {
       const oldSquareDivId = getPiecesSquareId(dragId) as DivId;
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
-        var enemyParentDiv = squareEl.parentElement;
+        //var enemyParentDiv = squareEl.parentElement;
+        var enemyParentDiv = squareEl;
         killPiece(enemyKilled, dropCell);
         placePiece(
           enemyParentDiv,
