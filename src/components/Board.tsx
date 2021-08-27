@@ -161,7 +161,7 @@ export const Board = () => {
       if (enemyKilled) {
         //var enemyParentDiv = squareEl.parentElement;
         var enemyParentDiv = squareEl;
-        killPiece(enemyKilled, dropCell);
+        killPiece(enemyKilled, enemyParentDiv.children[0].id);
         placePiece(
           enemyParentDiv,
           pieceEl,
@@ -219,9 +219,8 @@ export const Board = () => {
     return dragColor !== dropColor ? dropPiece : false;
   };
 
-  const killPiece = (boardPieceId: BoardPieceId, dropCellId: DivId) => {
+  const killPiece = (boardPieceId: BoardPieceId, pieceId: PieceDivId) => {
     if (boardPieceId) {
-      const pieceId: PieceDivId = `${dropCellId}-${boardPieceId.player}`;
       const pieceEl = document.getElementById(pieceId);
       pieceEl && pieceEl.remove();
     }
