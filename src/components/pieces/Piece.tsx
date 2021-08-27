@@ -28,6 +28,7 @@ import Rook_White from "../../util/images/Rook_White.svg";
 import Bishop_White from "../../util/images/Bishop_White.svg";
 import Knight_White from "../../util/images/Knight_White.svg";
 import { getValidSquaresPawn } from "./Pawn";
+import { getValidSquaresKing } from "./King";
 
 const svgs: any = {
   King_Black: King_Black,
@@ -66,6 +67,9 @@ export const getValidSquaresByType = (
 ) => {
   let getValidSquaresFunc: any = null;
   switch (pieceType) {
+    case "King":
+      getValidSquaresFunc = getValidSquaresKing;
+      break;
     case "Queen":
       getValidSquaresFunc = getValidSquaresQueen;
       break;
