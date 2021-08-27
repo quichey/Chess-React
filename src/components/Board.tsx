@@ -134,54 +134,8 @@ export const Board = () => {
     ev.preventDefault();
     var dragId = ev.dataTransfer.getData("dragId");
     var validSquares = JSON.parse(ev.dataTransfer.getData("validSquares"));
-    //var pieceType = ev.dataTransfer.getData("pieceType");
 
-    var dropCell = ev.target.id.slice(0, 3);
-    if (validSquares.includes(dropCell)) {
-      var pieceEl = document.getElementById(dragId);
-      var draggedPlayer = dragId.split("-")[2];
-      if (currPlayer !== draggedPlayer && !inAdminMode) {
-        return;
-      }
-      var enemyKilled = hasEnemyPiece(dragId, dropCell);
-      if (enemyKilled) {
-        var enemyParentDiv = ev.target.parentElement;
-        killPiece(enemyKilled, dropCell);
-        //console.log("Killed: " + enemyKilled);
-        //place piece on new square
-        placePiece(enemyParentDiv, pieceEl, dropCell, dragId, draggedPlayer);
-        /*
-        enemyParentDiv.appendChild(pieceEl);
-        pieceEl && (pieceEl.id = dropCell);
-        setBoard((prevBoard) => {
-          var newBoard = prevBoard;
-          newBoard[divIdToBoardIdx(dragId)] = "";
-          newBoard[divIdToBoardIdx(dropCell)] = {
-            piece: "Pawn",
-            player: draggedPlayer,
-          };
-          return newBoard;
-        });
-        */
-      } else {
-        //place piece on new square
-        placePiece(ev.target, pieceEl, dropCell, dragId, draggedPlayer);
-        /*
-        ev.target.appendChild(pieceEl);
-        pieceEl && (pieceEl.id = dropCell);
-        setBoard((prevBoard) => {
-          var newBoard = prevBoard;
-          newBoard[divIdToBoardIdx(dragId)] = "";
-          newBoard[divIdToBoardIdx(dropCell)] = {
-            piece: "Pawn",
-            player: draggedPlayer,
-          };
-          return newBoard;
-        });
-        */
-      }
-      setCurrPlayer(getOppositePlayer(currPlayer));
-    }
+    movePiece(ev.target, dragId, validSquares);
   }
 
   const movePiece = (
