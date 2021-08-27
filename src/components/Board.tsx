@@ -28,6 +28,7 @@ export const BoardContext = React.createContext({
 //export { boardContext };
 
 export const Board = () => {
+  const [inAdminMode, setInAdminMode] = React.useState(false);
   const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
   const col = new Array(8);
   col.fill(80);
@@ -117,7 +118,7 @@ export const Board = () => {
     if (validSquares.includes(dropCell)) {
       var pieceEl = document.getElementById(dragId);
       var draggedPlayer = dragId.split("-")[2];
-      if (currPlayer !== draggedPlayer) {
+      if (currPlayer !== draggedPlayer && !inAdminMode) {
         return;
       }
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
@@ -259,9 +260,18 @@ export const Board = () => {
 
     //}}}>
     <BoardContext.Provider value={{ board: board, currPlayer: currPlayer }}>
-      <div key={0} style={gameBoardCss}>
-        {divs}
-      </div>
+      <React.Fragment>
+        <button onClick={() => setInAdminMode(!inAdminMode)}>
+          Toggle Admin Mode{" "}
+        </button>
+        {inAdminMode
+          ? "In Admin Mode, can move any piece"
+          : "Not in Admin mode, players must take turns"}
+        <div key={0} style={gameBoardCss}>
+          {divs}
+        </div>
+      </React.Fragment>
+
       {isInCheck(currPlayer, board) ? <div>{currPlayer} IS IN CHECK</div> : ""}
     </BoardContext.Provider>
 

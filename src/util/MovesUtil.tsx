@@ -1,4 +1,5 @@
 import { getValidSquaresBishop } from "../components/pieces/Bishop";
+import { getValidSquaresKnight } from "../components/pieces/Knight";
 import { getValidSquaresQueen } from "../components/pieces/Queen";
 import { getValidSquaresRook } from "../components/pieces/Rook";
 import {
@@ -239,6 +240,8 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
       case "Bishop":
         getValidSquaresFunc = getValidSquaresBishop;
         break;
+      case "Knight":
+        getValidSquaresFunc = getValidSquaresKnight;
     }
     getValidSquaresFunc &&
       (moveSet = getValidSquaresFunc(oppositePlayer, row, col, board));
