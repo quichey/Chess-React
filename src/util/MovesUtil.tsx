@@ -226,13 +226,14 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
     return boardId && boardId.piece === "King" && boardId.player === currPlayer;
   });
   var kingSquareId = boardIdxToId(kingBoardIdx);
-  for (var boardInfoIdx in enemyBoardInfo) {
-    var boardInfo = enemyBoardInfo[boardInfoIdx];
-    var [row, col] = boardIdxToCell(boardInfo[1]);
+  for (var i = 0; i < enemyBoardInfo.length; i++) {
+    var boardInfo = enemyBoardInfo[i];
+    var boardInfoIdx = boardInfo[1];
+    var [row, col] = boardIdxToCell(boardInfoIdx);
     var piece = boardInfo[0] && boardInfo[0].piece;
 
     var pieceDivId = document.getElementById(boardIdxToId(Number(boardInfoIdx)))
-      ?.children[0].id;
+      ?.children[0]?.id;
 
     let moveSet: string[] = getValidSquaresByType(
       oppositePlayer,
@@ -243,7 +244,7 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
       pieceDivId as string
     );
     for (var moveIdx in moveSet) {
-      if (moveSet[moveIdx] === kingSquareId) {
+      if (moveSet[moveIdx] + "-square" === kingSquareId) {
         isInCheck = true;
         break;
       }
