@@ -19,7 +19,7 @@ import {
   getOppositePlayer,
   getPiecesSquareId,
 } from "../util/SquareUtil";
-import { isInCheck } from "../util/MovesUtil";
+import { isInCheck } from "../util/Check";
 import { getValidSquaresByType } from "./pieces/Piece";
 
 export const BoardContext = React.createContext({
