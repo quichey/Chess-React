@@ -23,6 +23,8 @@ import { isInCheck } from "../util/MovesUtil";
 export const BoardContext = React.createContext({
   board: [] as any[],
   currPlayer: "White" as Player,
+  inMoving: null as any,
+  setInMoving: null as any,
 });
 //const BoardContext = boardContext.Consumer;
 //export { boardContext };
@@ -30,6 +32,7 @@ export const BoardContext = React.createContext({
 export const Board = () => {
   const [inAdminMode, setInAdminMode] = React.useState(false);
   const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
+  const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
   const col = new Array(8);
   col.fill(80);
   const row = new Array(8);
@@ -259,7 +262,14 @@ export const Board = () => {
     //<boardContext.Provider value={{updatePiecePos: () => {
 
     //}}}>
-    <BoardContext.Provider value={{ board: board, currPlayer: currPlayer }}>
+    <BoardContext.Provider
+      value={{
+        board: board,
+        currPlayer: currPlayer,
+        inMoving: inMoving,
+        setInMoving: setInMoving,
+      }}
+    >
       <React.Fragment>
         <button onClick={() => setInAdminMode(!inAdminMode)}>
           Toggle Admin Mode{" "}

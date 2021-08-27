@@ -1,6 +1,11 @@
 import React from "react";
 
 import { BoardContext } from "../Board";
+import { getValidSquaresBishop } from "./Bishop";
+import { getValidSquaresQueen } from "./Queen";
+import { getValidSquaresRook } from "./Rook";
+import { getValidSquaresKnight } from "./Knight";
+
 import {
   RowIdx,
   ColIdx,
@@ -50,6 +55,30 @@ interface PieceProps {
   ) => DivId[];
 }
 
+export const getValidSquaresByType = (
+  player: Player,
+  pieceType: string,
+  row: RowIdx,
+  col: ColIdx,
+  board: any[]
+) => {
+  let getValidSquaresFunc: any = null;
+  switch (pieceType) {
+    case "Queen":
+      getValidSquaresFunc = getValidSquaresQueen;
+      break;
+    case "Rook":
+      getValidSquaresFunc = getValidSquaresRook;
+      break;
+    case "Bishop":
+      getValidSquaresFunc = getValidSquaresBishop;
+      break;
+    case "Knight":
+      getValidSquaresFunc = getValidSquaresKnight;
+  }
+  return getValidSquaresFunc && getValidSquaresFunc(player, row, col, board);
+};
+
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
   const boardContext = React.useContext(BoardContext);
   const drag = (event: any) => {
@@ -79,6 +108,10 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
       alt="test"
       onDragStart={drag}
       draggable
+      onClick={() => boardContext.setInMoving(pieceId)}
+      style={
+        boardContext.inMoving === pieceId ? { backgroundColor: "green" } : {}
+      }
     ></img>
     //</div>
   );

@@ -26,6 +26,10 @@ export const boardIdxToCell = (boardIdx: number) => {
   return [Math.floor(boardIdx / 8) as RowIdx, (boardIdx % 8) as ColIdx];
 };
 
+export const boardIdxToId = (boardIdx: number) => {
+  return cellToId(boardIdxToCell(boardIdx) as Cell);
+};
+
 export const rowColToBoardIdx = (row: RowIdx, col: ColIdx) => {
   return row * 8 + col;
 };
