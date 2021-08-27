@@ -112,7 +112,8 @@ export const Board = () => {
               boardId.piece,
               Number(movingSquareId.split("-")[0]) as RowIdx,
               Number(movingSquareId.split("-")[1]) as ColIdx,
-              board
+              board,
+              inMoving
             );
             movePiece(ev.target, inMoving as PieceDivId, validSquares);
             setInMoving("");

@@ -27,6 +27,7 @@ import Pawn_White from "../../util/images/Pawn_White.svg";
 import Rook_White from "../../util/images/Rook_White.svg";
 import Bishop_White from "../../util/images/Bishop_White.svg";
 import Knight_White from "../../util/images/Knight_White.svg";
+import { getValidSquaresPawn } from "./Pawn";
 
 const svgs: any = {
   King_Black: King_Black,
@@ -60,7 +61,8 @@ export const getValidSquaresByType = (
   pieceType: string,
   row: RowIdx,
   col: ColIdx,
-  board: any[]
+  board: any[],
+  pieceId: string
 ) => {
   let getValidSquaresFunc: any = null;
   switch (pieceType) {
@@ -75,9 +77,15 @@ export const getValidSquaresByType = (
       break;
     case "Knight":
       getValidSquaresFunc = getValidSquaresKnight;
+      break;
+    case "Pawn":
+      getValidSquaresFunc = getValidSquaresPawn;
+      break;
   }
   return (
-    (getValidSquaresFunc && getValidSquaresFunc(player, row, col, board)) || []
+    (getValidSquaresFunc &&
+      getValidSquaresFunc(player, row, col, board, pieceId)) ||
+    []
   );
 };
 

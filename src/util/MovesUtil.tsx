@@ -220,7 +220,6 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
     board
   );
   let isInCheck = false;
-  //Temp hardcoded king cell
   let kingBoardIdx = -1;
   board.find((boardId, idx) => {
     kingBoardIdx = Number(idx);
@@ -231,32 +230,18 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
     var boardInfo = enemyBoardInfo[boardInfoIdx];
     var [row, col] = boardIdxToCell(boardInfo[1]);
     var piece = boardInfo[0] && boardInfo[0].piece;
+
+    var pieceDivId = document.getElementById(boardIdxToId(Number(boardInfoIdx)))
+      ?.children[0].id;
+
     let moveSet: string[] = getValidSquaresByType(
       oppositePlayer,
       piece,
       row,
       col,
-      board
+      board,
+      pieceDivId as string
     );
-    /*
-    let getValidSquaresFunc: any = null;
-    let moveSet: string[] = [];
-    switch (piece) {
-      case "Queen":
-        getValidSquaresFunc = getValidSquaresQueen;
-        break;
-      case "Rook":
-        getValidSquaresFunc = getValidSquaresRook;
-        break;
-      case "Bishop":
-        getValidSquaresFunc = getValidSquaresBishop;
-        break;
-      case "Knight":
-        getValidSquaresFunc = getValidSquaresKnight;
-    }
-    getValidSquaresFunc &&
-      (moveSet = getValidSquaresFunc(oppositePlayer, row, col, board));
-      */
     for (var moveIdx in moveSet) {
       if (moveSet[moveIdx] === kingSquareId) {
         isInCheck = true;

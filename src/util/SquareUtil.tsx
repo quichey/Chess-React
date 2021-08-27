@@ -19,7 +19,7 @@ export const idToCell = (id: DivId) => {
 };
 
 export const cellToId = (cell: Cell) => {
-  return `${cell[0]}-${cell[1]}`;
+  return `${cell[0]}-${cell[1]}-square`;
 };
 
 export const boardIdxToCell = (boardIdx: number) => {
