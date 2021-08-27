@@ -51,11 +51,11 @@ describe("test cases for filterValidSquareWithCheck function", () => {
     let currPlayer: Player = "White";
     let board = Array(64).fill("");
     board[0] = { player: currPlayer, piece: "King" };
+    board[1] = { player: "White", piece: "Rook" };
     board[2] = { player: "Black", piece: "Rook" };
-    board[3] = { player: "White", piece: "Rook" };
-    const validSquares: DivId[] = ["1-3"];
+    const validSquares: DivId[] = ["1-1"];
     expect(
-      filterValidSquaresWithCheck(currPlayer, "Rook", validSquares, board)
+      filterValidSquaresWithCheck(currPlayer, "Rook", validSquares, board, 1)
     ).toEqual([]);
   });
 });

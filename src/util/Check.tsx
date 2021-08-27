@@ -58,10 +58,12 @@ export const filterValidSquaresWithCheck = (
   player: Player,
   pieceType: Piece,
   validSquares: DivId[],
-  board: any[]
+  board: any[],
+  originalBoardIdx: number
 ) => {
   return validSquares.filter((divId: DivId) => {
     let boardWithNewSquare = JSON.parse(JSON.stringify(board));
+    boardWithNewSquare[originalBoardIdx] = "";
     boardWithNewSquare[divIdToBoardIdx(divId)] = {
       player: player,
       piece: pieceType,
