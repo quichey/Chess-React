@@ -8,6 +8,7 @@ import { getValidSquaresKnight } from "./Knight";
 
 import {
   RowIdx,
+  PieceType,
   ColIdx,
   DivId,
   PieceDivId,
@@ -94,6 +95,15 @@ export const getValidSquaresByType = (
     []
   );
 };
+
+let getValidSquaresWithCheck = (
+  player: Player,
+  row: RowIdx,
+  col: ColIdx,
+  board: any[],
+  piece: PieceType,
+  pieceBoardIdx: number
+) => {};
 
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
   const boardContext = React.useContext(BoardContext);

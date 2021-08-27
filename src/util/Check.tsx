@@ -7,9 +7,21 @@ import {
   DivId,
   divIdToBoardIdx,
   getOppositePlayer,
-  Piece,
+  PieceType,
   Player,
 } from "./SquareUtil";
+
+export const isCheckMate = (currPlayer: Player, board: any[]) => {
+  var allPossibleBoards: any[][] = [];
+
+  for (var i in allPossibleBoards) {
+    var possBoard = allPossibleBoards[i];
+    if (!isInCheck(currPlayer, possBoard)) {
+      return false;
+    }
+  }
+  return true;
+};
 
 export const isInCheck = (currPlayer: Player, board: any[]) => {
   const oppositePlayer = getOppositePlayer(currPlayer);
@@ -56,7 +68,7 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
 
 export const filterValidSquaresWithCheck = (
   player: Player,
-  pieceType: Piece,
+  pieceType: PieceType,
   validSquares: DivId[],
   board: any[],
   originalBoardIdx: number

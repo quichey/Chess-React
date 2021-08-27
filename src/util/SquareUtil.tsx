@@ -1,14 +1,20 @@
 export type RowIdx = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type ColIdx = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type Player = "White" | "Black" | "";
-export type Piece = "King" | "Queen" | "Pawn" | "Rook" | "Bishop" | "Knight";
+export type PieceType =
+  | "King"
+  | "Queen"
+  | "Pawn"
+  | "Rook"
+  | "Bishop"
+  | "Knight";
 
 export type DivId = `${RowIdx}-${ColIdx}`;
 export type PieceDivId = `${RowIdx}-${ColIdx}-${Player}`;
 export type Cell = [RowIdx, ColIdx];
 export type BoardPieceId =
   | {
-      piece: Piece;
+      piece: PieceType;
       player: Player;
     }
   | "";
