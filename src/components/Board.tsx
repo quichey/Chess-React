@@ -19,6 +19,7 @@ import {
   getOppositePlayer,
 } from "../util/SquareUtil";
 import { isInCheck } from "../util/MovesUtil";
+import { getValidSquaresByType } from "./pieces/Piece";
 
 export const BoardContext = React.createContext({
   board: [] as any[],
@@ -32,7 +33,9 @@ export const BoardContext = React.createContext({
 export const Board = () => {
   const [inAdminMode, setInAdminMode] = React.useState(false);
   const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
+
   const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
+
   const col = new Array(8);
   col.fill(80);
   const row = new Array(8);
@@ -96,6 +99,22 @@ export const Board = () => {
           }}
           onDrop={drop}
           onDragOver={allowDrop}
+          onClick={(ev: any) => {
+            ev.dataTransfer.setData("dragId", inMoving);
+            const boardId = board[divIdToBoardIdx(inMoving as DivId)];
+            const validSquares = getValidSquaresByType(
+              boardId.player,
+              boardId.piece,
+              idx as RowIdx,
+              idx2 as ColIdx,
+              board
+            );
+            ev.dataTransfer.setData(
+              "validSquares",
+              JSON.stringify(validSquares)
+            );
+            drop(ev);
+          }}
         >
           {piece}
         </div>
@@ -164,6 +183,30 @@ export const Board = () => {
       setCurrPlayer(getOppositePlayer(currPlayer));
     }
   }
+
+  const movePiece = (
+    squareEl: any,
+    dragId: PieceDivId,
+    validSquares: DivId[]
+  ) => {
+    var dropCell = squareEl.id.slice(0, 3);
+    if (validSquares.includes(dropCell)) {
+      var pieceEl = document.getElementById(dragId);
+      var draggedPlayer = dragId.split("-")[2];
+      if (currPlayer !== draggedPlayer && !inAdminMode) {
+        return;
+      }
+      var enemyKilled = hasEnemyPiece(dragId, dropCell);
+      if (enemyKilled) {
+        var enemyParentDiv = squareEl.parentElement;
+        killPiece(enemyKilled, dropCell);
+        placePiece(enemyParentDiv, pieceEl, dropCell, dragId, draggedPlayer);
+      } else {
+        placePiece(squareEl, pieceEl, dropCell, dragId, draggedPlayer);
+      }
+      setCurrPlayer(getOppositePlayer(currPlayer));
+    }
+  };
 
   const placePiece = (
     squareDiv: any,
