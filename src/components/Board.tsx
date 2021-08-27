@@ -284,12 +284,17 @@ export const Board = () => {
         {inAdminMode
           ? "In Admin Mode, can move any piece"
           : "Not in Admin mode, players must take turns"}
+        <br />
+        {`${currPlayer}'s turn`}
+        {isInCheck(currPlayer, board) ? (
+          <div>{currPlayer} IS IN CHECK</div>
+        ) : (
+          <br />
+        )}
         <div key={0} style={gameBoardCss}>
           {divs}
         </div>
       </React.Fragment>
-
-      {isInCheck(currPlayer, board) ? <div>{currPlayer} IS IN CHECK</div> : ""}
     </BoardContext.Provider>
 
     /*
