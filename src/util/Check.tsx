@@ -4,7 +4,10 @@ import {
   boardIdxToCell,
   boardIdxToId,
   BoardPieceId,
+  DivId,
+  divIdToBoardIdx,
   getOppositePlayer,
+  Piece,
   Player,
 } from "./SquareUtil";
 
@@ -49,4 +52,20 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
     }
   }
   return isInCheck;
+};
+
+export const filterValidSquaresWithCheck = (
+  player: Player,
+  pieceType: Piece,
+  validSquares: DivId[],
+  board: any[]
+) => {
+  return validSquares.filter((divId: DivId) => {
+    let boardWithNewSquare = JSON.parse(JSON.stringify(board));
+    boardWithNewSquare[divIdToBoardIdx(divId)] = {
+      player: player,
+      piece: pieceType,
+    };
+    return !isInCheck(player, boardWithNewSquare);
+  });
 };
