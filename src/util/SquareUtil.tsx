@@ -47,3 +47,10 @@ export const isValidSquareId = (id: DivId) => {
 export const getOppositePlayer = (player: Player) => {
   return player === "White" ? ("Black" as Player) : ("White" as Player);
 };
+
+export const getPiecesSquareId = (pieceId: PieceDivId) => {
+  const pieceEl = document.getElementById(pieceId);
+  return (
+    pieceEl && pieceEl.parentElement && (pieceEl.parentElement.id as DivId)
+  );
+};

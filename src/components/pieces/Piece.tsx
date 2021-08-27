@@ -76,16 +76,19 @@ export const getValidSquaresByType = (
     case "Knight":
       getValidSquaresFunc = getValidSquaresKnight;
   }
-  return getValidSquaresFunc && getValidSquaresFunc(player, row, col, board);
+  return (
+    (getValidSquaresFunc && getValidSquaresFunc(player, row, col, board)) || []
+  );
 };
 
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
   const boardContext = React.useContext(BoardContext);
   const drag = (event: any) => {
     event.dataTransfer.setData("dragId", event.target.id);
+    const getPiecesSquare = event.target.parentElement.id.split("-");
     const pieceId: PieceDivId = event.target.id.split("-");
-    const row = Number(pieceId[0]) as RowIdx;
-    const col = Number(pieceId[1]) as RowIdx;
+    const row = Number(getPiecesSquare[0]) as RowIdx;
+    const col = Number(getPiecesSquare[1]) as RowIdx;
     const player: Player = pieceId[2] as Player;
     var validSquares = getValidSquares(
       player,

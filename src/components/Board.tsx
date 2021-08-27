@@ -17,6 +17,7 @@ import {
   RowIdx,
   ColIdx,
   getOppositePlayer,
+  getPiecesSquareId,
 } from "../util/SquareUtil";
 import { isInCheck } from "../util/MovesUtil";
 import { getValidSquaresByType } from "./pieces/Piece";
@@ -31,7 +32,7 @@ export const BoardContext = React.createContext({
 //export { boardContext };
 
 export const Board = () => {
-  const [inAdminMode, setInAdminMode] = React.useState(false);
+  const [inAdminMode, setInAdminMode] = React.useState(true);
   const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
   const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
@@ -100,20 +101,21 @@ export const Board = () => {
           onDrop={drop}
           onDragOver={allowDrop}
           onClick={(ev: any) => {
-            ev.dataTransfer.setData("dragId", inMoving);
-            const boardId = board[divIdToBoardIdx(inMoving as DivId)];
+            if (!inMoving) return;
+            const movingSquareId = getPiecesSquareId(inMoving);
+            if (!movingSquareId) return;
+            //const movingSquareId = inMovingPieceSquare.id as DivId;
+            const boardIdx = divIdToBoardIdx(movingSquareId);
+            const boardId = board[boardIdx];
             const validSquares = getValidSquaresByType(
               boardId.player,
               boardId.piece,
-              idx as RowIdx,
-              idx2 as ColIdx,
+              Number(movingSquareId.split("-")[0]) as RowIdx,
+              Number(movingSquareId.split("-")[1]) as ColIdx,
               board
             );
-            ev.dataTransfer.setData(
-              "validSquares",
-              JSON.stringify(validSquares)
-            );
-            drop(ev);
+            movePiece(ev.target, inMoving as PieceDivId, validSquares);
+            setInMoving("");
           }}
         >
           {piece}
@@ -150,34 +152,41 @@ export const Board = () => {
       if (currPlayer !== draggedPlayer && !inAdminMode) {
         return;
       }
+      const oldSquareDivId = getPiecesSquareId(dragId) as DivId;
       var enemyKilled = hasEnemyPiece(dragId, dropCell);
       if (enemyKilled) {
         var enemyParentDiv = squareEl.parentElement;
         killPiece(enemyKilled, dropCell);
-        placePiece(enemyParentDiv, pieceEl, dropCell, dragId, draggedPlayer);
+        placePiece(
+          enemyParentDiv,
+          pieceEl,
+          dropCell,
+          oldSquareDivId,
+          draggedPlayer
+        );
       } else {
-        placePiece(squareEl, pieceEl, dropCell, dragId, draggedPlayer);
+        placePiece(squareEl, pieceEl, dropCell, oldSquareDivId, draggedPlayer);
       }
       setCurrPlayer(getOppositePlayer(currPlayer));
     }
   };
 
   const placePiece = (
-    squareDiv: any,
+    newSquareDiv: any,
     pieceEl: any,
     dropCell: any,
-    dragId: any,
-    draggedPlayer: any
+    origSquareId: any,
+    player: any
   ) => {
-    squareDiv.appendChild(pieceEl);
-    pieceEl && (pieceEl.id = `${dropCell}-${draggedPlayer}`);
+    newSquareDiv.appendChild(pieceEl);
     var newBoard = board;
-    const dragPieceType =
-      board[divIdToBoardIdx(dragId)] && board[divIdToBoardIdx(dragId)].piece;
-    newBoard[divIdToBoardIdx(dragId)] = "";
+    const origPieceType =
+      board[divIdToBoardIdx(origSquareId)] &&
+      board[divIdToBoardIdx(origSquareId)].piece;
+    newBoard[divIdToBoardIdx(origSquareId)] = "";
     newBoard[divIdToBoardIdx(dropCell)] = {
-      piece: dragPieceType,
-      player: draggedPlayer,
+      piece: origPieceType,
+      player: player,
     };
     setBoard(newBoard);
     /*
