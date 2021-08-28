@@ -96,7 +96,7 @@ export const getValidSquaresByType = (
     );
 };
 
-let getValidSquaresWithCheck = (
+export const getValidSquaresWithCheck = (
     player: Player,
     row: RowIdx,
     col: ColIdx,
@@ -120,7 +120,7 @@ let getValidSquaresWithCheck = (
         board,
         pieceBoardIdx
     );
-    return validSquares;
+    return validSquares as DivId[];
 };
 
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
