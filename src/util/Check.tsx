@@ -1,6 +1,6 @@
 import {
     getValidSquaresByType,
-    getValidSquaresWithCheck,
+    //getValidSquaresWithCheck,
 } from "../components/pieces/Piece";
 import { getPlayerBoardInfo } from "./MovesUtil";
 import {

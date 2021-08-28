@@ -20,7 +20,10 @@ import {
     getPiecesSquareId,
 } from "../util/SquareUtil";
 import { isInCheck } from "../util/Check";
-import { getValidSquaresWithCheck } from "./pieces/Piece";
+import {
+    getValidSquaresWithCheck,
+    getValidSquaresWithCheckSimple,
+} from "./pieces/Piece";
 
 export const BoardContext = React.createContext({
     board: [] as any[],
@@ -107,7 +110,12 @@ export const Board = () => {
                         if (!movingSquareId) return;
                         //const movingSquareId = inMovingPieceSquare.id as DivId;
                         const boardIdx = divIdToBoardIdx(movingSquareId);
-                        const boardId = board[boardIdx];
+                        //const boardId = board[boardIdx];
+                        var validSquares = getValidSquaresWithCheckSimple(
+                            boardIdx,
+                            board
+                        );
+                        /*
                         var validSquares = getValidSquaresWithCheck(
                             boardId.player,
                             Number(movingSquareId.split("-")[0]) as RowIdx,
@@ -117,6 +125,7 @@ export const Board = () => {
                             boardIdx,
                             inMoving
                         );
+                        */
                         /*
             const validSquares = getValidSquaresByType(
               boardId.player,
