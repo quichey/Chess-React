@@ -1,6 +1,6 @@
 import {
     getValidSquaresByType,
-    //getValidSquaresWithCheck,
+    getValidSquaresWithCheck,
 } from "../components/pieces/Piece";
 import { getPlayerBoardInfo } from "./MovesUtil";
 import {
@@ -26,24 +26,31 @@ export const isCheckMate = (currPlayer: Player, board: any[]) => {
   }
   return true;
   */
-    /*
-  if (!isInCheck(currPlayer, board)) {
-    return false
-  } 
+    if (!isInCheck(currPlayer, board)) {
+        return false;
+    }
 
-  var playersPieces = board.filter((boardId) => {
-    return boardId && boardId.player === currPlayer
-  })
+    var boardInfos = board.map((boardId, idx) => {
+        if (!boardId) return boardId;
+        var copy = JSON.parse(JSON.stringify(boardId));
+        copy.idx = idx;
+        return copy;
+    });
 
-  for (var i in playersPieces) {
-    var currPiece = playersPieces[i],
+    var playersPieces = boardInfos.filter((boardId) => {
+        return boardId && boardId.player === currPlayer;
+    });
 
-    getValidSquaresWithCheck(
-      currPlayer,
+    for (var i in playersPieces) {
+        var currPiece = playersPieces[i];
 
-    )
-  }
-  */
+        var validSquares = getValidSquaresWithCheck(currPiece.idx, board);
+
+        if (validSquares.length > 0) {
+            return false;
+        }
+    }
+    return true;
 };
 
 export const isInCheck = (currPlayer: Player, board: any[]) => {

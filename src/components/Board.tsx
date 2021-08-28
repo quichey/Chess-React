@@ -19,7 +19,7 @@ import {
     getOppositePlayer,
     getPiecesSquareId,
 } from "../util/SquareUtil";
-import { isInCheck } from "../util/Check";
+import { isCheckMate, isInCheck } from "../util/Check";
 import { getValidSquaresWithCheck } from "./pieces/Piece";
 
 export const BoardContext = React.createContext({
@@ -33,6 +33,7 @@ export const BoardContext = React.createContext({
 
 export const Board = () => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
+    const [checkMate, setCheckMate] = React.useState(false);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
     const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
@@ -260,6 +261,10 @@ export const Board = () => {
     });
   });
 */
+    React.useEffect(() => {
+        setCheckMate(isCheckMate(currPlayer, board));
+    }, [currPlayer, board]);
+
     return false ? (
         /*
     <PixelGrid
@@ -299,6 +304,7 @@ export const Board = () => {
                 ) : (
                     <br />
                 )}
+                {checkMate ? <div>{currPlayer} IS IN CHECKMATE!!</div> : <br />}
                 <div key={0} style={gameBoardCss}>
                     {divs}
                 </div>
