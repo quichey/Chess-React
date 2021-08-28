@@ -8,10 +8,8 @@ import { getValidSquaresKnight } from "./Knight";
 
 import {
     RowIdx,
-    PieceType,
     ColIdx,
     DivId,
-    PieceDivId,
     Player,
     isValidSquareId,
     divIdToBoardIdx,
@@ -98,7 +96,7 @@ export const getValidSquaresByType = (
     );
 };
 
-export const getValidSquaresWithCheckSimple = (
+export const getValidSquaresWithCheck = (
     pieceBoardIdx: number,
     board: any[]
 ) => {
@@ -130,76 +128,15 @@ export const getValidSquaresWithCheckSimple = (
     return validSquares as DivId[];
 };
 
-export const getValidSquaresWithCheck = (
-    player: Player,
-    row: RowIdx,
-    col: ColIdx,
-    board: any[],
-    piece: PieceType,
-    pieceBoardIdx: number,
-    pieceId: PieceDivId
-) => {
-    var validSquares = getValidSquaresByType(
-        player,
-        piece,
-        row,
-        col,
-        board,
-        pieceId
-    ).filter(isValidSquareId);
-    validSquares = filterValidSquaresWithCheck(
-        player,
-        piece,
-        validSquares,
-        board,
-        pieceBoardIdx
-    );
-    return validSquares as DivId[];
-};
-
 export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
     const boardContext = React.useContext(BoardContext);
     const drag = (event: any) => {
         event.dataTransfer.setData("dragId", event.target.id);
-        //const getPiecesSquare = event.target.parentElement.id.split("-");
         const pieceBoardIdx = divIdToBoardIdx(event.target.parentElement.id);
-        //const boardId = boardContext.board[pieceBoardIdx];
-        //const pieceId: PieceDivId = event.target.id.split("-");
-        /*
-        const row = Number(getPiecesSquare[0]) as RowIdx;
-        const col = Number(getPiecesSquare[1]) as RowIdx;
-        const player: Player = pieceId[2] as Player;
-        */
-        var validSquares = getValidSquaresWithCheckSimple(
+        var validSquares = getValidSquaresWithCheck(
             pieceBoardIdx,
             boardContext.board
         );
-        /*
-        var validSquares = getValidSquaresWithCheck(
-            player,
-            row,
-            col,
-            boardContext.board,
-            boardId.piece,
-            pieceBoardIdx,
-            event.target.id
-        );
-        */
-        /*
-    var validSquares = getValidSquares(
-      player,
-      row,
-      col,
-      boardContext.board
-    ).filter(isValidSquareId);
-    validSquares = filterValidSquaresWithCheck(
-      player,
-      boardId.piece,
-      validSquares,
-      boardContext.board,
-      pieceBoardIdx
-    );
-    */
         event.dataTransfer.setData(
             "validSquares",
             JSON.stringify(validSquares)
@@ -209,7 +146,6 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
     const color = pieceId && pieceId.split("-")[2];
 
     return (
-        //<div style={{ width: 100, height: 100 }}>
         <img
             width="80px"
             height="80px"
@@ -225,6 +161,5 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
                     : {}
             }
         ></img>
-        //</div>
     );
 };

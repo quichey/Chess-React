@@ -20,10 +20,7 @@ import {
     getPiecesSquareId,
 } from "../util/SquareUtil";
 import { isInCheck } from "../util/Check";
-import {
-    getValidSquaresWithCheck,
-    getValidSquaresWithCheckSimple,
-} from "./pieces/Piece";
+import { getValidSquaresWithCheck } from "./pieces/Piece";
 
 export const BoardContext = React.createContext({
     board: [] as any[],
@@ -108,34 +105,11 @@ export const Board = () => {
                         if (!inMoving) return;
                         const movingSquareId = getPiecesSquareId(inMoving);
                         if (!movingSquareId) return;
-                        //const movingSquareId = inMovingPieceSquare.id as DivId;
                         const boardIdx = divIdToBoardIdx(movingSquareId);
-                        //const boardId = board[boardIdx];
-                        var validSquares = getValidSquaresWithCheckSimple(
+                        var validSquares = getValidSquaresWithCheck(
                             boardIdx,
                             board
                         );
-                        /*
-                        var validSquares = getValidSquaresWithCheck(
-                            boardId.player,
-                            Number(movingSquareId.split("-")[0]) as RowIdx,
-                            Number(movingSquareId.split("-")[1]) as ColIdx,
-                            board,
-                            boardId.piece,
-                            boardIdx,
-                            inMoving
-                        );
-                        */
-                        /*
-            const validSquares = getValidSquaresByType(
-              boardId.player,
-              boardId.piece,
-              Number(movingSquareId.split("-")[0]) as RowIdx,
-              Number(movingSquareId.split("-")[1]) as ColIdx,
-              board,
-              inMoving
-            );
-            */
                         movePiece(
                             ev.target,
                             inMoving as PieceDivId,
