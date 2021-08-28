@@ -15,6 +15,8 @@ import {
     Player,
     isValidSquareId,
     divIdToBoardIdx,
+    boardIdxToCell,
+    boardIdxToId,
 } from "../../util/SquareUtil";
 import King_Black from "../../util/images/King_Black.svg";
 import Queen_Black from "../../util/images/Queen_Black.svg";
@@ -96,6 +98,38 @@ export const getValidSquaresByType = (
     );
 };
 
+export const getValidSquaresWithCheckSimple = (
+    pieceBoardIdx: number,
+    board: any[]
+) => {
+    const boardId = board[pieceBoardIdx];
+    const player = boardId && boardId.player;
+    const piece = boardId && boardId.piece;
+    const [row, col] = boardIdxToCell(pieceBoardIdx);
+    const divId = boardIdxToId(pieceBoardIdx);
+    const squareDivEl = document.getElementById(divId);
+    const pieceDiv =
+        squareDivEl && squareDivEl.children && squareDivEl.children[0];
+    const pieceId = pieceDiv ? pieceDiv.id : "";
+
+    var validSquares = getValidSquaresByType(
+        player,
+        piece,
+        row,
+        col,
+        board,
+        pieceId
+    ).filter(isValidSquareId);
+    validSquares = filterValidSquaresWithCheck(
+        player,
+        piece,
+        validSquares,
+        board,
+        pieceBoardIdx
+    );
+    return validSquares as DivId[];
+};
+
 export const getValidSquaresWithCheck = (
     player: Player,
     row: RowIdx,
@@ -127,13 +161,20 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
     const boardContext = React.useContext(BoardContext);
     const drag = (event: any) => {
         event.dataTransfer.setData("dragId", event.target.id);
-        const getPiecesSquare = event.target.parentElement.id.split("-");
+        //const getPiecesSquare = event.target.parentElement.id.split("-");
         const pieceBoardIdx = divIdToBoardIdx(event.target.parentElement.id);
-        const boardId = boardContext.board[pieceBoardIdx];
-        const pieceId: PieceDivId = event.target.id.split("-");
+        //const boardId = boardContext.board[pieceBoardIdx];
+        //const pieceId: PieceDivId = event.target.id.split("-");
+        /*
         const row = Number(getPiecesSquare[0]) as RowIdx;
         const col = Number(getPiecesSquare[1]) as RowIdx;
         const player: Player = pieceId[2] as Player;
+        */
+        var validSquares = getValidSquaresWithCheckSimple(
+            pieceBoardIdx,
+            boardContext.board
+        );
+        /*
         var validSquares = getValidSquaresWithCheck(
             player,
             row,
@@ -143,6 +184,7 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
             pieceBoardIdx,
             event.target.id
         );
+        */
         /*
     var validSquares = getValidSquares(
       player,
