@@ -276,7 +276,7 @@ export const Board = () => {
       }}
     />
     */
-        ""
+        <div>test</div>
     ) : (
         //<React.Fragment>
         //<boardContext.Provider value={{updatePiecePos: () => {
