@@ -7,6 +7,7 @@ import { Board } from "./Board";
 
 export const Game = () => {
     const [client, setClient] = React.useState<any>("");
+    const [message, setMessage] = React.useState<any>("");
 
     React.useEffect(() => {
         if (client) {
@@ -35,7 +36,15 @@ export const Game = () => {
             >
                 Connect To WebSocket
             </button>
-            <Board />
+            <input type="text" onChange={(e) => setMessage(e.target.value)} />
+            <button
+                onClick={() => {
+                    client.send(message);
+                }}
+            >
+                Send message
+            </button>
+            <Board client={client} />
         </React.Fragment>
     );
 };

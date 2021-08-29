@@ -31,7 +31,11 @@ export const BoardContext = React.createContext({
 //const BoardContext = boardContext.Consumer;
 //export { boardContext };
 
-export const Board = () => {
+type BoardProps = {
+    client: any;
+};
+
+export const Board = ({ client }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
@@ -179,6 +183,14 @@ export const Board = () => {
                 );
             }
             setCurrPlayer(getOppositePlayer(currPlayer));
+            if (client) {
+                var message = {
+                    squareElId: squareEl.id,
+                    dragId: dragId,
+                    validSquares: validSquares,
+                };
+                client.send(`broadcast:${JSON.stringify(message)}`);
+            }
         }
     };
 
@@ -264,6 +276,14 @@ export const Board = () => {
     React.useEffect(() => {
         setCheckMate(isCheckMate(currPlayer, board));
     }, [currPlayer, board]);
+
+    React.useEffect(() => {
+        if (client) {
+            client.onmessage = (message: any) => {
+                console.log(message);
+            };
+        }
+    }, [client]);
 
     return false ? (
         /*
