@@ -33,7 +33,7 @@ import { getValidSquaresPawn } from "./Pawn";
 import { getValidSquaresKing } from "./King";
 import { filterValidSquaresWithCheck } from "../../util/Check";
 
-const svgs: any = {
+export const svgs: any = {
     King_Black: King_Black,
     Queen_Black: Queen_Black,
     Pawn_Black: Pawn_Black,
