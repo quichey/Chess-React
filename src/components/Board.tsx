@@ -147,73 +147,26 @@ export const Board = ({ client }: BoardProps) => {
             : ev.target.parentElement;
         movePiece(squareEl, dragId, validSquares);
     }
-
-    const movePiece = (
-        squareEl: any,
-        dragId: PieceDivId,
-        validSquares: DivId[],
-        fromOther?: boolean
-    ) => {
-        var dropCell = squareEl.id.slice(0, 3);
-        if (validSquares.includes(dropCell)) {
-            var pieceEl = document.getElementById(dragId);
-            var draggedPlayer = dragId.split("-")[2];
-            if (currPlayer !== draggedPlayer && !inAdminMode) {
-                return;
-            }
-            const oldSquareDivId = getPiecesSquareId(dragId) as DivId;
-            var enemyKilled = hasEnemyPiece(dragId, dropCell);
-            if (enemyKilled) {
-                //var enemyParentDiv = squareEl.parentElement;
-                var enemyParentDiv = squareEl;
-                killPiece(enemyKilled, enemyParentDiv.children[0].id);
-                placePiece(
-                    enemyParentDiv,
-                    pieceEl,
-                    dropCell,
-                    oldSquareDivId,
-                    draggedPlayer
-                );
-            } else {
-                placePiece(
-                    squareEl,
-                    pieceEl,
-                    dropCell,
-                    oldSquareDivId,
-                    draggedPlayer
-                );
-            }
-            setCurrPlayer(getOppositePlayer(currPlayer));
-            if (client && !fromOther) {
-                var message = {
-                    squareElId: squareEl.id,
-                    dragId: dragId,
-                    validSquares: validSquares,
-                };
-                client.send(`broadcast:${JSON.stringify(message)}`);
-            }
-        }
-    };
-
-    const placePiece = (
-        newSquareDiv: any,
-        pieceEl: any,
-        dropCell: any,
-        origSquareId: any,
-        player: any
-    ) => {
-        newSquareDiv.appendChild(pieceEl);
-        var newBoard = board;
-        const origPieceType =
-            board[divIdToBoardIdx(origSquareId)] &&
-            board[divIdToBoardIdx(origSquareId)].piece;
-        newBoard[divIdToBoardIdx(origSquareId)] = "";
-        newBoard[divIdToBoardIdx(dropCell)] = {
-            piece: origPieceType,
-            player: player,
-        };
-        setBoard(newBoard);
-        /*
+    const placePiece = React.useCallback(
+        (
+            newSquareDiv: any,
+            pieceEl: any,
+            dropCell: any,
+            origSquareId: any,
+            player: any
+        ) => {
+            newSquareDiv.appendChild(pieceEl);
+            var newBoard = board;
+            const origPieceType =
+                board[divIdToBoardIdx(origSquareId)] &&
+                board[divIdToBoardIdx(origSquareId)].piece;
+            newBoard[divIdToBoardIdx(origSquareId)] = "";
+            newBoard[divIdToBoardIdx(dropCell)] = {
+                piece: origPieceType,
+                player: player,
+            };
+            setBoard(newBoard);
+            /*
     setBoard((prevBoard) => {
       var newBoard = prevBoard;
       const dragPieceType =
@@ -227,16 +180,70 @@ export const Board = ({ client }: BoardProps) => {
       return newBoard;
     });
     */
-    };
+        },
+        [board]
+    );
 
-    const hasEnemyPiece = (dragPieceId: string, dropCell: DivId) => {
-        const dragColor = dragPieceId.split("-")[2];
-        const [row, col] = idToCell(dropCell);
-        const boardIdx: number = rowColToBoardIdx(row, col);
-        const dropPiece: BoardPieceId = board[boardIdx];
-        const dropColor = dropPiece && dropPiece.player;
-        return dragColor !== dropColor ? dropPiece : false;
-    };
+    const hasEnemyPiece = React.useCallback(
+        (dragPieceId: string, dropCell: DivId) => {
+            const dragColor = dragPieceId.split("-")[2];
+            const [row, col] = idToCell(dropCell);
+            const boardIdx: number = rowColToBoardIdx(row, col);
+            const dropPiece: BoardPieceId = board[boardIdx];
+            const dropColor = dropPiece && dropPiece.player;
+            return dragColor !== dropColor ? dropPiece : false;
+        },
+        [board]
+    );
+    const movePiece = React.useCallback(
+        (
+            squareEl: any,
+            dragId: PieceDivId,
+            validSquares: DivId[],
+            fromOther?: boolean
+        ) => {
+            var dropCell = squareEl.id.slice(0, 3);
+            if (validSquares.includes(dropCell)) {
+                var pieceEl = document.getElementById(dragId);
+                var draggedPlayer = dragId.split("-")[2];
+                if (currPlayer !== draggedPlayer && !inAdminMode) {
+                    return;
+                }
+                const oldSquareDivId = getPiecesSquareId(dragId) as DivId;
+                var enemyKilled = hasEnemyPiece(dragId, dropCell);
+                if (enemyKilled) {
+                    //var enemyParentDiv = squareEl.parentElement;
+                    var enemyParentDiv = squareEl;
+                    killPiece(enemyKilled, enemyParentDiv.children[0].id);
+                    placePiece(
+                        enemyParentDiv,
+                        pieceEl,
+                        dropCell,
+                        oldSquareDivId,
+                        draggedPlayer
+                    );
+                } else {
+                    placePiece(
+                        squareEl,
+                        pieceEl,
+                        dropCell,
+                        oldSquareDivId,
+                        draggedPlayer
+                    );
+                }
+                setCurrPlayer(getOppositePlayer(currPlayer));
+                if (client && !fromOther) {
+                    var message = {
+                        squareElId: squareEl.id,
+                        dragId: dragId,
+                        validSquares: validSquares,
+                    };
+                    client.send(`broadcast:${JSON.stringify(message)}`);
+                }
+            }
+        },
+        [client, currPlayer, hasEnemyPiece, inAdminMode, placePiece]
+    );
 
     const killPiece = (boardPieceId: BoardPieceId, pieceId: PieceDivId) => {
         if (boardPieceId) {
@@ -301,7 +308,7 @@ export const Board = ({ client }: BoardProps) => {
                 }
             };
         }
-    }, [client]);
+    }, [client, movePiece]);
 
     return false ? (
         /*
