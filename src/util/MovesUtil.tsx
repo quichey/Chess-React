@@ -240,3 +240,23 @@ export const getPlayerBoardInfo = (player: Player, board: any[]) => {
         return boardInfo && boardInfo[0].player === player;
     }) as [BoardPieceId, number][];
 };
+
+export const pawnReachedEnd = (board: any[]) => {
+    const firstRow = board.slice(0, 8);
+    const lastRow = board.slice(board.length - 8, board.length);
+
+    for (var i in firstRow) {
+        var boardId = firstRow[i];
+        if (boardId && boardId.piece === "Pawn") {
+            return true;
+        }
+    }
+
+    for (i in lastRow) {
+        boardId = lastRow[i];
+        if (boardId && boardId.piece === "Pawn") {
+            return true;
+        }
+    }
+    return false;
+};

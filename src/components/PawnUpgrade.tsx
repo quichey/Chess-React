@@ -15,6 +15,7 @@ export const PawnUpgrade = ({ player }: PawnUpgradeProps) => {
         gridTemplateRows: "80px 80px 80px 80px",
         justifyContent: "center",
         height: "320px",
+        zIndex: 99999,
     };
 
     const boxCss = {
