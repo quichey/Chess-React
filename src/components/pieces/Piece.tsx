@@ -48,7 +48,16 @@ export const svgs: any = {
     Bishop_White: Bishop_White,
     Knight_White: Knight_White,
 };
-
+/*
+export const components: any = {
+    King_: King,
+    Queen_: Queen,
+    Pawn_: Pawn,
+    Rook_: Rook,
+    Bishop_: Bishop,
+    Knight_: Knight,
+};
+*/
 interface PieceProps {
     pieceType: string;
     pieceId: string;

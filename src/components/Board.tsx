@@ -35,6 +35,15 @@ export const BoardContext = React.createContext({
 //const BoardContext = boardContext.Consumer;
 //export { boardContext };
 
+export const components: any = {
+    King_: King,
+    Queen_: Queen,
+    Pawn_: Pawn,
+    Rook_: Rook,
+    Bishop_: Bishop,
+    Knight_: Knight,
+};
+
 type BoardProps = {
     client: any;
 };
@@ -43,6 +52,7 @@ export const Board = ({ client }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
+    const [upgradedPiece, setUpgradedPiece] = React.useState<any>(null);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
     const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
@@ -319,6 +329,17 @@ export const Board = ({ client }: BoardProps) => {
         }
     }, [client, movePiece]);
 
+    React.useEffect(() => {
+        if (upgradedPiece) {
+            /*
+            var pieceDivEl = document.getElementById(
+                `${origPawnId}-${piece}`
+            );
+            pieceDivEl && squareEl?.appendChild(pieceDivEl);
+            */
+        }
+    }, [upgradedPiece]);
+
     return false ? (
         /*
     <PixelGrid
@@ -375,19 +396,17 @@ export const Board = ({ client }: BoardProps) => {
 
                             pawnEl && pawnEl.remove();
 
-                            React.createElement(piece, {
-                                pieceId: `${origPawnId}-${piece}`,
-                            });
-
-                            var pieceDivEl = document.getElementById(
-                                `${origPawnId}-${piece}`
+                            setUpgradedPiece(
+                                React.createElement(components[`${piece}_`], {
+                                    pieceId: `${origPawnId}-${piece}`,
+                                })
                             );
-                            pieceDivEl && squareEl?.appendChild(pieceDivEl);
                         }}
                     />
                 ) : (
                     ""
                 )}
+                {upgradedPiece}
             </React.Fragment>
         </BoardContext.Provider>
 
