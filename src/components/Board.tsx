@@ -151,7 +151,8 @@ export const Board = ({ client }: BoardProps) => {
     const movePiece = (
         squareEl: any,
         dragId: PieceDivId,
-        validSquares: DivId[]
+        validSquares: DivId[],
+        fromOther?: boolean
     ) => {
         var dropCell = squareEl.id.slice(0, 3);
         if (validSquares.includes(dropCell)) {
@@ -183,7 +184,7 @@ export const Board = ({ client }: BoardProps) => {
                 );
             }
             setCurrPlayer(getOppositePlayer(currPlayer));
-            if (client) {
+            if (client && !fromOther) {
                 var message = {
                     squareElId: squareEl.id,
                     dragId: dragId,
@@ -281,6 +282,23 @@ export const Board = ({ client }: BoardProps) => {
         if (client) {
             client.onmessage = (message: any) => {
                 console.log(message);
+                if (message.data) {
+                    var movePieceParams =
+                        message.data.split("broadcast:") &&
+                        message.data.split("broadcast:")[1];
+                    movePieceParams = JSON.parse(movePieceParams);
+                    if (movePieceParams) {
+                        movePieceParams.squareEl = document.getElementById(
+                            movePieceParams.squareElId
+                        );
+                        movePiece(
+                            movePieceParams.squareEl,
+                            movePieceParams.dragId,
+                            movePieceParams.validSquares,
+                            true
+                        );
+                    }
+                }
             };
         }
     }, [client]);

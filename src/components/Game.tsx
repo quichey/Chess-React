@@ -14,9 +14,11 @@ export const Game = () => {
             client.onopen = () => {
                 console.log("WebSocket Client Connected");
             };
+            /*
             client.onmessage = (message: any) => {
                 console.log(message);
             };
+            */
         }
     }, [client]);
     return (
