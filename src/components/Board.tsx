@@ -331,12 +331,13 @@ export const Board = ({ client }: BoardProps) => {
 
     React.useEffect(() => {
         if (upgradedPiece) {
-            /*
             var pieceDivEl = document.getElementById(
-                `${origPawnId}-${piece}`
+                upgradedPiece.props.pieceId
+            );
+            var squareEl = document.getElementById(
+                upgradedPiece.props.pieceId.split("squareDivId-")[1]
             );
             pieceDivEl && squareEl?.appendChild(pieceDivEl);
-            */
         }
     }, [upgradedPiece]);
 
@@ -398,7 +399,9 @@ export const Board = ({ client }: BoardProps) => {
 
                             setUpgradedPiece(
                                 React.createElement(components[`${piece}_`], {
-                                    pieceId: `${origPawnId}-${piece}`,
+                                    pieceId: `${origPawnId}-${piece}-squareDivId-${
+                                        squareEl && squareEl.id
+                                    }`,
                                 })
                             );
                         }}
