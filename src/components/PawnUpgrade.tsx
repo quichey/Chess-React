@@ -1,13 +1,14 @@
 import React from "react";
-import { Player } from "../util/SquareUtil";
+import { PieceType, Player } from "../util/SquareUtil";
 
 import { svgs } from "./pieces/Piece";
 
-type PawnUpgradeProps = {
+interface PawnUpgradeProps {
     player: Player;
-};
+    onUpgradeSelect?: (piece: PieceType) => void;
+}
 
-export const PawnUpgrade = ({ player }: PawnUpgradeProps) => {
+export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
     const optionsGridCss = {
         display: "grid",
         gridTemplateColumns: "80px",
@@ -34,12 +35,28 @@ export const PawnUpgrade = ({ player }: PawnUpgradeProps) => {
             divs.push(
                 <div
                     key={key}
+                    id={`${key}_upgrade`}
                     style={{
                         ...boxCss,
                     }}
-                    onClick={(ev: any) => {}}
+                    /*onClick={(ev: any) => {
+                        const piece = ev.target.id.split("_")[0];
+                        console.log("selected to upgrade to: " + piece);
+                        onUpgradeSelect && onUpgradeSelect(piece);
+                    }}*/
                 >
-                    <img width="80px" height="80px" src={el} alt="test"></img>
+                    <img
+                        width="80px"
+                        height="80px"
+                        id={`${key}_upgrade_img`}
+                        src={el}
+                        alt="test"
+                        onClick={(ev: any) => {
+                            const piece = ev.target.id.split("_")[0];
+                            console.log("selected to upgrade to: " + piece);
+                            onUpgradeSelect && onUpgradeSelect(piece);
+                        }}
+                    ></img>
                 </div>
             );
         }
