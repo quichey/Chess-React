@@ -248,14 +248,14 @@ export const pawnReachedEnd = (board: any[]) => {
     for (var i in firstRow) {
         var boardId = firstRow[i];
         if (boardId && boardId.piece === "Pawn") {
-            return true;
+            return { ...boardId, idx: Number(i) };
         }
     }
 
     for (i in lastRow) {
         boardId = lastRow[i];
         if (boardId && boardId.piece === "Pawn") {
-            return true;
+            return { ...boardId, idx: board.length - 8 + Number(i) };
         }
     }
     return false;

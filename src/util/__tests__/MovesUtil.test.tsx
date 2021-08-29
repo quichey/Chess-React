@@ -6,13 +6,21 @@ describe("test cases for Pawn Reached End function", () => {
     it("returns true when a pawn is at the first row", () => {
         let board = Array(64).fill("");
         board[0] = { player: "White", piece: "Pawn" };
-        expect(pawnReachedEnd(board)).toBe(true);
+        expect(pawnReachedEnd(board)).toEqual({
+            player: "White",
+            piece: "Pawn",
+            idx: 0,
+        });
     });
 
     it("returns true when a pawn is at the last row", () => {
         let board = Array(64).fill("");
         board[63] = { player: "White", piece: "Pawn" };
-        expect(pawnReachedEnd(board)).toBe(true);
+        expect(pawnReachedEnd(board)).toEqual({
+            player: "White",
+            piece: "Pawn",
+            idx: 63,
+        });
     });
 
     it("returns false when a pawn is at the second row", () => {
