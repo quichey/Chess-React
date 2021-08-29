@@ -18,9 +18,13 @@ import {
     ColIdx,
     getOppositePlayer,
     getPiecesSquareId,
+    PieceType,
+    boardIdxToId,
 } from "../util/SquareUtil";
 import { isCheckMate, isInCheck } from "../util/Check";
 import { getValidSquaresWithCheck } from "./pieces/Piece";
+import { pawnReachedEnd } from "../util/MovesUtil";
+import { PawnUpgrade } from "./PawnUpgrade";
 
 export const BoardContext = React.createContext({
     board: [] as any[],
@@ -38,6 +42,7 @@ type BoardProps = {
 export const Board = ({ client }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
+    const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
     const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
@@ -283,6 +288,10 @@ export const Board = ({ client }: BoardProps) => {
 */
     React.useEffect(() => {
         setCheckMate(isCheckMate(currPlayer, board));
+        var pawnNeedsUpgrade = pawnReachedEnd(board);
+        if (pawnNeedsUpgrade) {
+            setShowPawnUpgrade(pawnNeedsUpgrade);
+        }
     }, [currPlayer, board]);
 
     React.useEffect(() => {
@@ -353,6 +362,32 @@ export const Board = ({ client }: BoardProps) => {
                 <div key={0} style={gameBoardCss}>
                     {divs}
                 </div>
+                {showPawnUpgrade ? (
+                    <PawnUpgrade
+                        player={currPlayer}
+                        onUpgradeSelect={(piece: PieceType) => {
+                            var pawnsIdx =
+                                showPawnUpgrade && showPawnUpgrade.idx;
+                            var squareDivId = boardIdxToId(pawnsIdx);
+                            var squareEl = document.getElementById(squareDivId);
+                            var pawnEl = squareEl && squareEl.children[0];
+                            var origPawnId = pawnEl && pawnEl.id;
+
+                            pawnEl && pawnEl.remove();
+
+                            React.createElement(piece, {
+                                pieceId: `${origPawnId}-${piece}`,
+                            });
+
+                            var pieceDivEl = document.getElementById(
+                                `${origPawnId}-${piece}`
+                            );
+                            pieceDivEl && squareEl?.appendChild(pieceDivEl);
+                        }}
+                    />
+                ) : (
+                    ""
+                )}
             </React.Fragment>
         </BoardContext.Provider>
 

@@ -2,7 +2,7 @@ import React from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 
 import { Board } from "./Board";
-import { PawnUpgrade } from "./PawnUpgrade";
+//import { PawnUpgrade } from "./PawnUpgrade";
 
 //const client = new W3CWebSocket("ws://localhost:8999");
 
@@ -48,7 +48,9 @@ export const Game = () => {
                 Send message
             </button>
             <Board client={client} />
-            <PawnUpgrade player="White" />
+            {
+                //<PawnUpgrade player="White" />
+            }
         </React.Fragment>
     );
 };
