@@ -52,6 +52,7 @@ export const Board = ({ client }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
+    //const [pawnUpgradeComp, setPawnUpgradeComp] = React.useState<any>(null);
     const [upgradedPieces, setUpgradedPieces] = React.useState<any>([]);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
@@ -307,6 +308,16 @@ export const Board = ({ client }: BoardProps) => {
     }, [currPlayer, board]);
 
     React.useEffect(() => {
+        if (showPawnUpgrade) {
+            var upgradeEl = document.getElementById("pawn-upgrade");
+            var pawnsIdx = showPawnUpgrade && showPawnUpgrade.idx;
+            var squareDivId = boardIdxToId(pawnsIdx);
+            var squareEl = document.getElementById(squareDivId);
+            upgradeEl && squareEl?.appendChild(upgradeEl);
+        }
+    }, [showPawnUpgrade]);
+
+    React.useEffect(() => {
         if (client) {
             client.onmessage = (message: any) => {
                 console.log(message);
@@ -393,7 +404,13 @@ export const Board = ({ client }: BoardProps) => {
                                 showPawnUpgrade && showPawnUpgrade.idx;
                             var squareDivId = boardIdxToId(pawnsIdx);
                             var squareEl = document.getElementById(squareDivId);
-                            var pawnEl = squareEl && squareEl.children[0];
+                            var pawnEl =
+                                squareEl &&
+                                Array.from(squareEl.children)?.find((el) => {
+                                    return (
+                                        el && !el.id.includes("pawn-upgrade")
+                                    );
+                                });
                             var origPawnId = pawnEl && pawnEl.id;
 
                             pawnEl && pawnEl.remove();
@@ -419,6 +436,11 @@ export const Board = ({ client }: BoardProps) => {
                                 piece: piece,
                             };
                             setBoard(copy);
+                            var pawnUpgradeEl =
+                                document.getElementById("pawn-upgrade");
+                            //pawnUpgradeEl && pawnUpgradeEl?.remove();
+                            pawnUpgradeEl &&
+                                squareEl?.removeChild(pawnUpgradeEl);
                         }}
                     />
                 ) : (

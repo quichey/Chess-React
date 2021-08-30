@@ -17,6 +17,9 @@ export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
         justifyContent: "center",
         height: "320px",
         zIndex: 99999,
+        position: "relative" as "relative",
+        top: "20px",
+        left: "20px",
     };
 
     const boxCss = {
@@ -62,5 +65,9 @@ export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
         }
     }
 
-    return <div style={optionsGridCss}>{divs}</div>;
+    return (
+        <div id="pawn-upgrade" style={optionsGridCss}>
+            {divs}
+        </div>
+    );
 };
