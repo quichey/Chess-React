@@ -386,7 +386,7 @@ export const Board = ({ client }: BoardProps) => {
                 </div>
                 {showPawnUpgrade ? (
                     <PawnUpgrade
-                        player={currPlayer}
+                        player={getOppositePlayer(currPlayer)}
                         onUpgradeSelect={(piece: PieceType) => {
                             var pawnsIdx =
                                 showPawnUpgrade && showPawnUpgrade.idx;
@@ -404,6 +404,14 @@ export const Board = ({ client }: BoardProps) => {
                                     }`,
                                 })
                             );
+
+                            //update board state
+                            var copy = JSON.parse(JSON.stringify(board));
+                            copy[pawnsIdx] = {
+                                ...showPawnUpgrade,
+                                piece: piece,
+                            };
+                            setBoard(copy);
                         }}
                     />
                 ) : (
