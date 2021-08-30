@@ -396,8 +396,9 @@ export const Board = ({ client }: BoardProps) => {
                 <div key={0} style={gameBoardCss}>
                     {divs}
                 </div>
-                {showPawnUpgrade ? (
-                    <div id="pawn-upgrade-container">
+
+                <div id="pawn-upgrade-container">
+                    {showPawnUpgrade ? (
                         <PawnUpgrade
                             player={getOppositePlayer(currPlayer)}
                             pawnToUpgrade={showPawnUpgrade}
@@ -456,12 +457,13 @@ export const Board = ({ client }: BoardProps) => {
                                     pawnUpgradeContainer?.appendChild(
                                         pawnUpgradeEl
                                     );
+                                setShowPawnUpgrade(null);
                             }}
                         />
-                    </div>
-                ) : (
-                    ""
-                )}
+                    ) : (
+                        ""
+                    )}
+                </div>
                 {upgradedPieces.map((piece: any, idx: number) => {
                     return (
                         <div key={idx} onDrop={drop} onDragOver={allowDrop}>
