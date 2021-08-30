@@ -86,27 +86,33 @@ export const Board = ({ client }: BoardProps) => {
             var pieceId = `${idx}-${idx2}-${color}`;
             let boardPieceId: BoardPieceId = "";
             if (idx === 1 || idx === 6) {
+                pieceId += "-Pawn";
                 piece = <Pawn pieceId={pieceId} />;
                 boardPieceId = { piece: "Pawn", player: color };
             } else if (idx === 0 || idx === 7) {
                 //set pieces in first and last rows
                 if (idx2 === 3) {
+                    pieceId += "-King";
                     piece = <King pieceId={pieceId} />;
                     boardPieceId = { piece: "King", player: color };
                 }
                 if (idx2 === 4) {
+                    pieceId += "-Queen";
                     piece = <Queen pieceId={pieceId} />;
                     boardPieceId = { piece: "Queen", player: color };
                 }
                 if (idx2 === 0 || idx2 === 7) {
+                    pieceId += "-Rook";
                     piece = <Rook pieceId={pieceId} />;
                     boardPieceId = { piece: "Rook", player: color };
                 }
                 if (idx2 === 1 || idx2 === 6) {
+                    pieceId += "-Bishop";
                     piece = <Bishop pieceId={pieceId} />;
                     boardPieceId = { piece: "Bishop", player: color };
                 }
                 if (idx2 === 2 || idx2 === 5) {
+                    pieceId += "-Knight";
                     piece = <Knight pieceId={pieceId} />;
                     boardPieceId = { piece: "Knight", player: color };
                 }
@@ -393,7 +399,7 @@ export const Board = ({ client }: BoardProps) => {
                     <br />
                 )}
                 {checkMate ? <div>{currPlayer} IS IN CHECKMATE!!</div> : <br />}
-                <div key={0} style={gameBoardCss}>
+                <div key={0} style={gameBoardCss} id="chess-board">
                     {divs}
                 </div>
 
