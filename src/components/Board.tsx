@@ -52,7 +52,7 @@ export const Board = ({ client }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
-    const [upgradedPiece, setUpgradedPiece] = React.useState<any>(null);
+    const [upgradedPieces, setUpgradedPieces] = React.useState<any>([]);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
 
     const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
@@ -330,16 +330,15 @@ export const Board = ({ client }: BoardProps) => {
     }, [client, movePiece]);
 
     React.useEffect(() => {
-        if (upgradedPiece) {
-            var pieceDivEl = document.getElementById(
-                upgradedPiece.props.pieceId
-            );
+        if (upgradedPieces.length > 0) {
+            var newUpgraded = upgradedPieces[upgradedPieces.length - 1];
+            var pieceDivEl = document.getElementById(newUpgraded.props.pieceId);
             var squareEl = document.getElementById(
-                upgradedPiece.props.pieceId.split("squareDivId-")[1]
+                newUpgraded.props.pieceId.split("squareDivId-")[1]
             );
             pieceDivEl && squareEl?.appendChild(pieceDivEl);
         }
-    }, [upgradedPiece]);
+    }, [upgradedPieces]);
 
     return false ? (
         /*
@@ -397,12 +396,18 @@ export const Board = ({ client }: BoardProps) => {
 
                             pawnEl && pawnEl.remove();
 
-                            setUpgradedPiece(
-                                React.createElement(components[`${piece}_`], {
-                                    pieceId: `${origPawnId}-${piece}-squareDivId-${
-                                        squareEl && squareEl.id
-                                    }`,
-                                })
+                            setUpgradedPieces(
+                                upgradedPieces.concat([
+                                    React.createElement(
+                                        components[`${piece}_`],
+                                        {
+                                            pieceId: `${origPawnId}-${piece}-squareDivId-${
+                                                squareEl && squareEl.id
+                                            }`,
+                                            key: upgradedPieces.length,
+                                        }
+                                    ),
+                                ])
                             );
 
                             //update board state
@@ -417,7 +422,7 @@ export const Board = ({ client }: BoardProps) => {
                 ) : (
                     ""
                 )}
-                {upgradedPiece}
+                {upgradedPieces}
             </React.Fragment>
         </BoardContext.Provider>
 
