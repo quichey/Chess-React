@@ -157,9 +157,11 @@ export const Board = ({ client }: BoardProps) => {
         var dragId = ev.dataTransfer.getData("dragId");
         var validSquares = JSON.parse(ev.dataTransfer.getData("validSquares"));
 
-        var squareEl = ev.target.id.includes("square")
-            ? ev.target
-            : ev.target.parentElement;
+        var squareEl =
+            ev.target.id.includes("square") &&
+            !ev.target.id.includes("squareDivId")
+                ? ev.target
+                : ev.target.parentElement;
         movePiece(squareEl, dragId, validSquares);
     }
     const placePiece = React.useCallback(
@@ -422,7 +424,13 @@ export const Board = ({ client }: BoardProps) => {
                 ) : (
                     ""
                 )}
-                {upgradedPieces}
+                {upgradedPieces.map((piece: any, idx: number) => {
+                    return (
+                        <div key={idx} onDrop={drop} onDragOver={allowDrop}>
+                            {piece}
+                        </div>
+                    );
+                })}
             </React.Fragment>
         </BoardContext.Provider>
 
