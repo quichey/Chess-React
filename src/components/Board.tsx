@@ -397,52 +397,68 @@ export const Board = ({ client }: BoardProps) => {
                     {divs}
                 </div>
                 {showPawnUpgrade ? (
-                    <PawnUpgrade
-                        player={getOppositePlayer(currPlayer)}
-                        onUpgradeSelect={(piece: PieceType) => {
-                            var pawnsIdx =
-                                showPawnUpgrade && showPawnUpgrade.idx;
-                            var squareDivId = boardIdxToId(pawnsIdx);
-                            var squareEl = document.getElementById(squareDivId);
-                            var pawnEl =
-                                squareEl &&
-                                Array.from(squareEl.children)?.find((el) => {
-                                    return (
-                                        el && !el.id.includes("pawn-upgrade")
-                                    );
-                                });
-                            var origPawnId = pawnEl && pawnEl.id;
-
-                            pawnEl && pawnEl.remove();
-
-                            setUpgradedPieces(
-                                upgradedPieces.concat([
-                                    React.createElement(
-                                        components[`${piece}_`],
-                                        {
-                                            pieceId: `${origPawnId}-${piece}-squareDivId-${
-                                                squareEl && squareEl.id
-                                            }`,
-                                            key: upgradedPieces.length,
+                    <div id="pawn-upgrade-container">
+                        <PawnUpgrade
+                            player={getOppositePlayer(currPlayer)}
+                            pawnToUpgrade={showPawnUpgrade}
+                            upgradedComponents={upgradedPieces}
+                            onUpgradeSelect={(piece: PieceType) => {
+                                var pawnsIdx =
+                                    showPawnUpgrade && showPawnUpgrade.idx;
+                                var squareDivId = boardIdxToId(pawnsIdx);
+                                var squareEl =
+                                    document.getElementById(squareDivId);
+                                var pawnEl =
+                                    squareEl &&
+                                    Array.from(squareEl.children)?.find(
+                                        (el) => {
+                                            return (
+                                                el &&
+                                                !el.id.includes("pawn-upgrade")
+                                            );
                                         }
-                                    ),
-                                ])
-                            );
+                                    );
+                                var origPawnId = pawnEl && pawnEl.id;
 
-                            //update board state
-                            var copy = JSON.parse(JSON.stringify(board));
-                            copy[pawnsIdx] = {
-                                ...showPawnUpgrade,
-                                piece: piece,
-                            };
-                            setBoard(copy);
-                            var pawnUpgradeEl =
-                                document.getElementById("pawn-upgrade");
-                            //pawnUpgradeEl && pawnUpgradeEl?.remove();
-                            pawnUpgradeEl &&
-                                squareEl?.removeChild(pawnUpgradeEl);
-                        }}
-                    />
+                                pawnEl && pawnEl.remove();
+
+                                setUpgradedPieces(
+                                    upgradedPieces.concat([
+                                        React.createElement(
+                                            components[`${piece}_`],
+                                            {
+                                                pieceId: `${origPawnId}-${piece}-squareDivId-${
+                                                    squareEl && squareEl.id
+                                                }`,
+                                                key: upgradedPieces.length,
+                                            }
+                                        ),
+                                    ])
+                                );
+
+                                //update board state
+                                var copy = JSON.parse(JSON.stringify(board));
+                                copy[pawnsIdx] = {
+                                    ...showPawnUpgrade,
+                                    piece: piece,
+                                };
+                                setBoard(copy);
+                                var pawnUpgradeEl =
+                                    document.getElementById("pawn-upgrade");
+                                //pawnUpgradeEl && pawnUpgradeEl?.remove();
+                                //pawnUpgradeEl &&
+                                //    squareEl?.removeChild(pawnUpgradeEl);
+                                var pawnUpgradeContainer =
+                                    document.getElementById(
+                                        "pawn-upgrade-container"
+                                    );
+                                pawnUpgradeEl &&
+                                    pawnUpgradeContainer?.appendChild(
+                                        pawnUpgradeEl
+                                    );
+                            }}
+                        />
+                    </div>
                 ) : (
                     ""
                 )}

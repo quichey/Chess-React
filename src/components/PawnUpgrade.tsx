@@ -5,10 +5,21 @@ import { svgs } from "./pieces/Piece";
 
 interface PawnUpgradeProps {
     player: Player;
-    onUpgradeSelect?: (piece: PieceType) => void;
+    pawnToUpgrade: any;
+    upgradedComponents: any;
+    onUpgradeSelect?: (
+        piece: PieceType,
+        pawnToUpgrade: any,
+        upgradedComponents: any
+    ) => void;
 }
 
-export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
+export const PawnUpgrade = ({
+    player,
+    pawnToUpgrade,
+    upgradedComponents,
+    onUpgradeSelect,
+}: PawnUpgradeProps) => {
     const optionsGridCss = {
         display: "grid",
         gridTemplateColumns: "80px",
@@ -57,7 +68,12 @@ export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
                         onClick={(ev: any) => {
                             const piece = ev.target.id.split("_")[0];
                             console.log("selected to upgrade to: " + piece);
-                            onUpgradeSelect && onUpgradeSelect(piece);
+                            onUpgradeSelect &&
+                                onUpgradeSelect(
+                                    piece,
+                                    pawnToUpgrade,
+                                    upgradedComponents
+                                );
                         }}
                     ></img>
                 </div>
