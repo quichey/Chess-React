@@ -6,6 +6,8 @@ import {
     BoardPieceId,
     rowColToBoardIdx,
     getOppositePlayer,
+    PieceDivId,
+    getPiecesSquareId,
 } from "./SquareUtil";
 
 export const getStraightMoves = (
@@ -259,4 +261,9 @@ export const pawnReachedEnd = (board: any[]) => {
         }
     }
     return false;
+};
+
+export const pieceHasMoved = (pieceDivId: PieceDivId) => {
+    const squareId = getPiecesSquareId(pieceDivId);
+    return squareId?.slice(0, 3) === pieceDivId.slice(0, 3);
 };
