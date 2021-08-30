@@ -5,10 +5,15 @@ import { svgs } from "./pieces/Piece";
 
 interface PawnUpgradeProps {
     player: Player;
+    side: "top" | "bottom";
     onUpgradeSelect?: (piece: PieceType) => void;
 }
 
-export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
+export const PawnUpgrade = ({
+    player,
+    side,
+    onUpgradeSelect,
+}: PawnUpgradeProps) => {
     const optionsGridCss = {
         display: "grid",
         gridTemplateColumns: "80px",
@@ -18,7 +23,7 @@ export const PawnUpgrade = ({ player, onUpgradeSelect }: PawnUpgradeProps) => {
         height: "320px",
         zIndex: 99999,
         position: "relative" as "relative",
-        top: "20px",
+        top: side === "top" ? "20px" : "-400px",
         left: "20px",
     };
 

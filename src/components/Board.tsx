@@ -401,6 +401,7 @@ export const Board = ({ client }: BoardProps) => {
                     {showPawnUpgrade ? (
                         <PawnUpgrade
                             player={getOppositePlayer(currPlayer)}
+                            side={showPawnUpgrade.idx < 30 ? "top" : "bottom"}
                             onUpgradeSelect={(piece: PieceType) => {
                                 var pawnsIdx =
                                     showPawnUpgrade && showPawnUpgrade.idx;
