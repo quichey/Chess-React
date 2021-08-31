@@ -18,6 +18,14 @@ export type BoardPieceId =
           player: Player;
       }
     | "";
+export type Move =
+    | {
+          pieceType: PieceType;
+          player: Player;
+          oldBoardIdx: number;
+          newBoardIdx: number;
+      }
+    | "";
 
 export const idToCell = (id: DivId) => {
     const rowCol = id.split("-").slice(0, 2);

@@ -20,6 +20,7 @@ import {
     getPiecesSquareId,
     PieceType,
     boardIdxToId,
+    Move,
 } from "../util/SquareUtil";
 import { isCheckMate, isInCheck } from "../util/Check";
 import { getValidSquaresWithCheck } from "./pieces/Piece";
@@ -31,6 +32,7 @@ export const BoardContext = React.createContext({
     currPlayer: "White" as Player,
     inMoving: null as any,
     setInMoving: null as any,
+    prevMove: "" as Move,
 });
 //const BoardContext = boardContext.Consumer;
 //export { boardContext };
@@ -55,6 +57,7 @@ export const Board = ({ client }: BoardProps) => {
     //const [pawnUpgradeComp, setPawnUpgradeComp] = React.useState<any>(null);
     const [upgradedPieces, setUpgradedPieces] = React.useState<any>([]);
     const [currPlayer, setCurrPlayer] = React.useState<Player>("White");
+    const [prevMove, setPrevMove] = React.useState<Move>("");
 
     const [inMoving, setInMoving] = React.useState<PieceDivId | "">("");
 
@@ -191,20 +194,13 @@ export const Board = ({ client }: BoardProps) => {
 
             setBoard(newBoard);
             newSquareDiv.appendChild(pieceEl);
-            /*
-    setBoard((prevBoard) => {
-      var newBoard = prevBoard;
-      const dragPieceType =
-        prevBoard[divIdToBoardIdx(dragId)] &&
-        prevBoard[divIdToBoardIdx(dragId)].piece;
-      newBoard[divIdToBoardIdx(dragId)] = "";
-      newBoard[divIdToBoardIdx(dropCell)] = {
-        piece: dragPieceType,
-        player: draggedPlayer,
-      };
-      return newBoard;
-    });
-    */
+            setPrevMove({
+                pieceType: origPieceType,
+                player: pieceEl.id.split("-")[2],
+                oldBoardIdx: divIdToBoardIdx(origSquareId),
+                newBoardIdx: divIdToBoardIdx(newSquareDiv.id),
+            });
+            //console.log(prevMove)
         },
         [board]
     );
@@ -282,36 +278,7 @@ export const Board = ({ client }: BoardProps) => {
             pieceEl && pieceEl.remove();
         }
     };
-    /*
-  const divs: React.ReactNode[] = [];
 
-  row.forEach((el, idx) => {
-    col.forEach((el2, idx2) => {
-      let piece: JSX.Element | "" = "";
-      var pieceId = `${idx}-${idx2}`;
-
-      if (idx === 1 || idx === 6) {
-        piece = <Pawn pieceId={pieceId} />;
-      } else if (idx === 0 || idx === 7) {
-        //set pieces in first and last rows
-        if (idx2 === 2 || idx2 === 5) {
-          piece = <Knight pieceId={pieceId} />;
-        }
-      }
-      divs.push(
-        <div
-          key={`${idx}-${idx2}`}
-          id={`${idx}-${idx2}-square`}
-          style={boxCss}
-          onDrop={drop}
-          onDragOver={allowDrop}
-        >
-          {piece}
-        </div>
-      );
-    });
-  });
-*/
     React.useEffect(() => {
         setCheckMate(isCheckMate(currPlayer, board));
         var pawnNeedsUpgrade = pawnReachedEnd(board);
@@ -367,28 +334,15 @@ export const Board = ({ client }: BoardProps) => {
     }, [upgradedPieces]);
 
     return false ? (
-        /*
-    <PixelGrid
-      data={Array(400).fill(0).map(Math.random)}
-      options={{
-        size: 10,
-        padding: 2,
-        background: [0, 0.5, 0.7, 1],
-      }}
-    />
-    */
         <div>test</div>
     ) : (
-        //<React.Fragment>
-        //<boardContext.Provider value={{updatePiecePos: () => {
-
-        //}}}>
         <BoardContext.Provider
             value={{
                 board: board,
                 currPlayer: currPlayer,
                 inMoving: inMoving,
                 setInMoving: setInMoving,
+                prevMove: prevMove,
             }}
         >
             <React.Fragment>
@@ -406,6 +360,8 @@ export const Board = ({ client }: BoardProps) => {
                     <br />
                 )}
                 {checkMate ? <div>{currPlayer} IS IN CHECKMATE!!</div> : <br />}
+                <div> {JSON.stringify(prevMove)}</div>
+                <br />
                 <div key={0} style={gameBoardCss} id="chess-board">
                     {divs}
                 </div>
@@ -485,17 +441,5 @@ export const Board = ({ client }: BoardProps) => {
                 })}
             </React.Fragment>
         </BoardContext.Provider>
-
-        /*
-      {true ? (
-        //<Piece pieceId="test" img="TEST" />
-        ""
-      ) : (
-        <div key={1} id="piece" draggable="true" onDragStart={drag}>
-          TEXT
-        </div>
-      )}
-    </React.Fragment>
-    */
     );
 };
