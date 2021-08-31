@@ -239,22 +239,15 @@ export const Board = ({ client }: BoardProps) => {
                     //var enemyParentDiv = squareEl.parentElement;
                     var enemyParentDiv = squareEl;
                     killPiece(enemyKilled, enemyParentDiv.children[0].id);
-                    placePiece(
-                        enemyParentDiv,
-                        pieceEl,
-                        dropCell,
-                        oldSquareDivId,
-                        draggedPlayer
-                    );
-                } else {
-                    placePiece(
-                        squareEl,
-                        pieceEl,
-                        dropCell,
-                        oldSquareDivId,
-                        draggedPlayer
-                    );
                 }
+                placePiece(
+                    squareEl,
+                    pieceEl,
+                    dropCell,
+                    oldSquareDivId,
+                    draggedPlayer
+                );
+
                 if (dragId.includes("King")) {
                     let dropColl = Number(dropCell.charAt(2));
                     let kingColl = Number(dragId.charAt(2));
