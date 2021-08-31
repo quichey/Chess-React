@@ -1,4 +1,5 @@
 import { getValidSquaresByType } from "../components/pieces/Piece";
+import { isInCheck } from "./Check";
 import { getPlayerBoardInfo, pieceHasMoved } from "./MovesUtil";
 import {
     boardIdxToCell,
@@ -127,7 +128,11 @@ export const canCastle = (player: Player, board: any[]) => {
         });
         if (!hasPieceBetween) {
             let hasPieceAttacking = false;
-            let checkAttackIndices = [kingInfo.idx - 1, kingInfo.idx - 2];
+            let checkAttackIndices = [
+                kingInfo.idx,
+                kingInfo.idx - 1,
+                kingInfo.idx - 2,
+            ];
             checkAttackIndices.forEach((idx: number) => {
                 if (
                     squareIsAttacked(board, boardIdxToId(idx) as DivId, player)
@@ -160,7 +165,11 @@ export const canCastle = (player: Player, board: any[]) => {
         });
         if (!hasPieceBetween) {
             let hasPieceAttacking = false;
-            let checkAttackIndices = [kingInfo.idx + 1, kingInfo.idx + 2];
+            let checkAttackIndices = [
+                kingInfo.idx,
+                kingInfo.idx + 1,
+                kingInfo.idx + 2,
+            ];
             checkAttackIndices.forEach((idx: number) => {
                 if (
                     squareIsAttacked(board, boardIdxToId(idx) as DivId, player)
