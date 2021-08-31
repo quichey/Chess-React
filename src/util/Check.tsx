@@ -44,7 +44,7 @@ export const isCheckMate = (currPlayer: Player, board: any[]) => {
     for (var i in playersPieces) {
         var currPiece = playersPieces[i];
 
-        var validSquares = getValidSquaresWithCheck(currPiece.idx, board);
+        var validSquares = getValidSquaresWithCheck(currPiece.idx, board, "");
 
         if (validSquares.length > 0) {
             return false;
@@ -84,7 +84,8 @@ export const isInCheck = (currPlayer: Player, board: any[]) => {
             row,
             col,
             board,
-            pieceDivId as string
+            pieceDivId as string,
+            ""
         );
         for (var moveIdx in moveSet) {
             if (moveSet[moveIdx] + "-square" === kingSquareId) {

@@ -15,6 +15,7 @@ import {
     divIdToBoardIdx,
     boardIdxToCell,
     boardIdxToId,
+    Move,
 } from "../../util/SquareUtil";
 import King_Black from "../../util/images/King_Black.svg";
 import Queen_Black from "../../util/images/Queen_Black.svg";
@@ -75,7 +76,8 @@ export const getValidSquaresByType = (
     row: RowIdx,
     col: ColIdx,
     board: any[],
-    pieceId: string
+    pieceId: string,
+    prevMove: Move
 ) => {
     let getValidSquaresFunc: any = null;
     switch (pieceType) {
@@ -100,14 +102,15 @@ export const getValidSquaresByType = (
     }
     return (
         (getValidSquaresFunc &&
-            getValidSquaresFunc(player, row, col, board, pieceId)) ||
+            getValidSquaresFunc(player, row, col, board, pieceId, prevMove)) ||
         []
     );
 };
 
 export const getValidSquaresWithCheck = (
     pieceBoardIdx: number,
-    board: any[]
+    board: any[],
+    prevMove: Move
 ) => {
     const boardId = board[pieceBoardIdx];
     const player = boardId && boardId.player;
@@ -125,7 +128,8 @@ export const getValidSquaresWithCheck = (
         row,
         col,
         board,
-        pieceId
+        pieceId,
+        prevMove
     ).filter(isValidSquareId);
     validSquares = filterValidSquaresWithCheck(
         player,
@@ -144,7 +148,8 @@ export const Piece = ({ pieceType, pieceId, getValidSquares }: PieceProps) => {
         const pieceBoardIdx = divIdToBoardIdx(event.target.parentElement.id);
         var validSquares = getValidSquaresWithCheck(
             pieceBoardIdx,
-            boardContext.board
+            boardContext.board,
+            boardContext.prevMove
         );
         event.dataTransfer.setData(
             "validSquares",

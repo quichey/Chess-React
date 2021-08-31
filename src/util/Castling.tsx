@@ -31,7 +31,8 @@ export const pieceAttacksSquare = (
         row,
         col,
         board,
-        pieceDivId as string
+        pieceDivId as string,
+        ""
     );
     for (var moveIdx in moveSet) {
         if (moveSet[moveIdx] + "-square" === targetDivId) {

@@ -138,7 +138,8 @@ export const Board = ({ client }: BoardProps) => {
                         const boardIdx = divIdToBoardIdx(movingSquareId);
                         var validSquares = getValidSquaresWithCheck(
                             boardIdx,
-                            board
+                            board,
+                            prevMove
                         );
                         movePiece(
                             ev.target,
