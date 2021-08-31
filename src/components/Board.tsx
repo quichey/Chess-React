@@ -49,9 +49,10 @@ export const components: any = {
 
 type BoardProps = {
     client: any;
+    handleGameOver?: () => void;
 };
 
-export const Board = ({ client }: BoardProps) => {
+export const Board = ({ client, handleGameOver }: BoardProps) => {
     const [inAdminMode, setInAdminMode] = React.useState(true);
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
@@ -349,6 +350,12 @@ export const Board = ({ client }: BoardProps) => {
         }
     }, [upgradedPieces]);
 
+    React.useEffect(() => {
+        if (checkMate) {
+            handleGameOver && handleGameOver();
+        }
+    }, [checkMate, handleGameOver]);
+
     return false ? (
         <div>test</div>
     ) : (
@@ -362,24 +369,30 @@ export const Board = ({ client }: BoardProps) => {
             }}
         >
             <React.Fragment>
-                <button onClick={() => setInAdminMode(!inAdminMode)}>
-                    Toggle Admin Mode{" "}
-                </button>
-                {inAdminMode
-                    ? "In Admin Mode, can move any piece"
-                    : "Not in Admin mode, players must take turns"}
-                <br />
-                {`${currPlayer}'s turn`}
-                {isInCheck(currPlayer, board) ? (
-                    <div>{currPlayer} IS IN CHECK</div>
-                ) : (
+                <div id="chess-board-container">
+                    <button onClick={() => setInAdminMode(!inAdminMode)}>
+                        Toggle Admin Mode{" "}
+                    </button>
+                    {inAdminMode
+                        ? "In Admin Mode, can move any piece"
+                        : "Not in Admin mode, players must take turns"}
                     <br />
-                )}
-                {checkMate ? <div>{currPlayer} IS IN CHECKMATE!!</div> : <br />}
-                <div> {JSON.stringify(prevMove)}</div>
-                <br />
-                <div key={0} style={gameBoardCss} id="chess-board">
-                    {divs}
+                    {`${currPlayer}'s turn`}
+                    {isInCheck(currPlayer, board) ? (
+                        <div>{currPlayer} IS IN CHECK</div>
+                    ) : (
+                        <br />
+                    )}
+                    {checkMate ? (
+                        <div>{currPlayer} IS IN CHECKMATE!!</div>
+                    ) : (
+                        <br />
+                    )}
+                    <div> {JSON.stringify(prevMove)}</div>
+                    <br />
+                    <div key={0} style={gameBoardCss} id="chess-board">
+                        {divs}
+                    </div>
                 </div>
 
                 <div id="pawn-upgrade-container">
