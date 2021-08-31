@@ -172,24 +172,25 @@ export const Board = ({ client }: BoardProps) => {
         movePiece(squareEl, dragId, validSquares);
     }
     const placePiece = React.useCallback(
-        (
-            newSquareDiv: any,
-            pieceEl: any,
-            dropCell: any,
-            origSquareId: any,
-            player: any
-        ) => {
-            newSquareDiv.appendChild(pieceEl);
+        (newSquareDiv: any, pieceEl: any) => {
+            if (!pieceEl || !newSquareDiv) return;
+
+            let origSquareId = getPiecesSquareId(pieceEl.id);
+            if (!origSquareId) return;
+
             var newBoard = board;
             const origPieceType =
                 board[divIdToBoardIdx(origSquareId)] &&
                 board[divIdToBoardIdx(origSquareId)].piece;
             newBoard[divIdToBoardIdx(origSquareId)] = "";
-            newBoard[divIdToBoardIdx(dropCell)] = {
+
+            newBoard[divIdToBoardIdx(newSquareDiv.id)] = {
                 piece: origPieceType,
-                player: player,
+                player: pieceEl.id.split("-")[2],
             };
+
             setBoard(newBoard);
+            newSquareDiv.appendChild(pieceEl);
             /*
     setBoard((prevBoard) => {
       var newBoard = prevBoard;
@@ -233,21 +234,15 @@ export const Board = ({ client }: BoardProps) => {
                 if (currPlayer !== draggedPlayer && !inAdminMode) {
                     return;
                 }
-                const oldSquareDivId = getPiecesSquareId(dragId) as DivId;
                 var enemyKilled = hasEnemyPiece(dragId, dropCell);
                 if (enemyKilled) {
                     //var enemyParentDiv = squareEl.parentElement;
                     var enemyParentDiv = squareEl;
                     killPiece(enemyKilled, enemyParentDiv.children[0].id);
                 }
-                placePiece(
-                    squareEl,
-                    pieceEl,
-                    dropCell,
-                    oldSquareDivId,
-                    draggedPlayer
-                );
+                placePiece(squareEl, pieceEl);
 
+                //do Castle
                 if (dragId.includes("King")) {
                     let dropColl = Number(dropCell.charAt(2));
                     let kingColl = Number(dragId.charAt(2));
@@ -264,16 +259,7 @@ export const Board = ({ client }: BoardProps) => {
                         let newRookSquareEl =
                             document.getElementById(dropRookDivId);
                         let rookEl = document.getElementById(rookDivId);
-                        let oldSquareDivId = castleLeft
-                            ? `${kingRow}-0-square`
-                            : `${kingRow}-7-square`;
-                        placePiece(
-                            newRookSquareEl,
-                            rookEl,
-                            dropRookDivId,
-                            oldSquareDivId,
-                            draggedPlayer
-                        );
+                        placePiece(newRookSquareEl, rookEl);
                     }
                 }
                 setCurrPlayer(getOppositePlayer(currPlayer));
