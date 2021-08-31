@@ -5,8 +5,8 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
+//import IconButton from "@material-ui/core/IconButton";
+//import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 
 /*
@@ -28,7 +28,7 @@ const DialogTitle = (props: any) => {
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <Typography variant="h6">{children}</Typography>
-            {onClose ? (
+            {/*onClose ? (
                 <IconButton
                     aria-label="close"
                     className={classes.closeButton}
@@ -37,7 +37,7 @@ const DialogTitle = (props: any) => {
                 >
                     <CloseIcon />
                 </IconButton>
-            ) : null}
+            ) : null*/}
         </MuiDialogTitle>
     );
 };
@@ -68,9 +68,11 @@ export const CustomizedDialogs = ({
     text,
     restartGame,
 }: IDialogProps) => {
+    /*
     const handleClickOpen = () => {
         setOpen(true);
     };
+    */
     const handleClose = () => {
         setOpen(false);
         restartGame();
@@ -78,13 +80,15 @@ export const CustomizedDialogs = ({
 
     return (
         <div>
-            <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleClickOpen}
-            >
-                Open dialog
-            </Button>
+            {/*
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleClickOpen}
+                >
+                    Open dialog
+                </Button>*/}
+
             <Dialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"

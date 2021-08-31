@@ -17,6 +17,8 @@ export const Game = () => {
     //console.log(gameNumber);
     const [gameOver, setGameOver] = React.useState(false);
 
+    const handleGameOver = React.useCallback(() => setGameOver(true), []);
+
     React.useEffect(() => {
         if (client) {
             client.onopen = () => {
@@ -63,10 +65,7 @@ export const Game = () => {
                 Send message
             </button>
             <div id="board-container">
-                <Board
-                    client={client}
-                    handleGameOver={() => setGameOver(true)}
-                />
+                <Board client={client} handleGameOver={handleGameOver} />
             </div>
             <div id="new-board-container">{newBoards}</div>
             <CustomizedDialogs
@@ -77,6 +76,7 @@ export const Game = () => {
                     document.getElementById("chess-board-container")?.remove();
                     newBoards.push(
                         <Board
+                            key={newBoards.length}
                             client={client}
                             handleGameOver={() => setGameOver(true)}
                         />
@@ -84,6 +84,7 @@ export const Game = () => {
                     setNewBoards(newBoards.slice());
 
                     setGameNumber(gameNumber + 1);
+                    setGameOver(false);
                 }}
             />
             {

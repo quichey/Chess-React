@@ -396,8 +396,6 @@ export const Board = ({ client, handleGameOver }: BoardProps) => {
                     ) : (
                         <br />
                     )}
-                    <div> {JSON.stringify(prevMove)}</div>
-                    <br />
                     <div key={0} style={gameBoardCss} id="chess-board">
                         {divs}
                     </div>
