@@ -1,5 +1,4 @@
 import { getValidSquaresByType } from "../components/pieces/Piece";
-import { isInCheck } from "./Check";
 import { getPlayerBoardInfo, pieceHasMoved } from "./MovesUtil";
 import {
     boardIdxToCell,
