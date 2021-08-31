@@ -245,7 +245,15 @@ export const Board = ({ client, handleGameOver }: BoardProps) => {
                 placePiece(squareEl, pieceEl);
 
                 //do Castle
-                if (dragId.includes("King")) {
+
+                if (
+                    validSquares
+                        .find((id) => {
+                            return id.includes(dropCell);
+                        })
+                        ?.includes("castle")
+                ) {
+                    //if (dragId.includes("King")) {
                     let dropColl = Number(dropCell.charAt(2));
                     let kingColl = Number(dragId.charAt(2));
                     let kingRow = Number(dragId.charAt(0));

@@ -143,7 +143,8 @@ export const canCastle = (player: Player, board: any[]) => {
 
             if (!hasPieceAttacking) {
                 castleDivIds.push(
-                    boardIdxToId(kingInfo.idx - 2).slice(0, 3) as DivId
+                    (boardIdxToId(kingInfo.idx - 2).slice(0, 3) +
+                        "-castle") as DivId
                 );
             }
         }
@@ -180,7 +181,8 @@ export const canCastle = (player: Player, board: any[]) => {
 
             if (!hasPieceAttacking) {
                 castleDivIds.push(
-                    boardIdxToId(kingInfo.idx + 2).slice(0, 3) as DivId
+                    (boardIdxToId(kingInfo.idx + 2).slice(0, 3) +
+                        "-castle") as DivId
                 );
             }
         }
