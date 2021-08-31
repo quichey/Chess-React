@@ -265,5 +265,5 @@ export const pawnReachedEnd = (board: any[]) => {
 
 export const pieceHasMoved = (pieceDivId: PieceDivId) => {
     const squareId = getPiecesSquareId(pieceDivId);
-    return squareId?.slice(0, 3) === pieceDivId.slice(0, 3);
+    return squareId?.slice(0, 3) !== pieceDivId.slice(0, 3);
 };

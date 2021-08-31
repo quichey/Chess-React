@@ -5,6 +5,7 @@ import {
     boardIdxToId,
     BoardPieceId,
     DivId,
+    divIdToBoardIdx,
     getBoardInfos,
     getOppositePlayer,
     getPlayersPieceDivIds,
@@ -69,13 +70,13 @@ export const canCastle = (player: Player, board: any[]) => {
             boardInfo.player === player
         );
     });
-    const kingSquareDivId = boardIdxToId(kingInfo.idx);
+    //const kingSquareDivId = boardIdxToId(kingInfo.idx);
     const kingPieceDivId: PieceDivId | undefined = pieceDivIds.find((divId) => {
         return divId.includes("King");
     });
 
-    if (!kingPieceDivId) return false;
-
+    if (!kingPieceDivId) return [];
+    /*
     const rookInfos = boardInfos.filter((boardInfo) => {
         return (
             boardInfo &&
@@ -85,7 +86,7 @@ export const canCastle = (player: Player, board: any[]) => {
     });
     const rookSquareDivIds = rookInfos.map((rookInfo) => {
         return boardIdxToId(rookInfo.idx);
-    });
+    });*/
     const rookPieceDivIds = pieceDivIds.filter((divId) => {
         return divId.includes("Rook");
     });
@@ -96,9 +97,80 @@ export const canCastle = (player: Player, board: any[]) => {
     ];
     for (var i in castlingPieceDivIds) {
         if (pieceHasMoved(castlingPieceDivIds[i])) {
-            return false;
+            return [];
         }
     }
 
-    console.log(kingSquareDivId + rookSquareDivIds);
+    //can tell left and right rook by comparing the column numbers
+    let leftRook: PieceDivId | undefined = rookPieceDivIds.find((divId) => {
+        return divId.charAt(2) < kingPieceDivId.charAt(2);
+    }) as PieceDivId;
+    let rightRook: PieceDivId | undefined = rookPieceDivIds.find((divId) => {
+        return divId.charAt(2) > kingPieceDivId.charAt(2);
+    }) as PieceDivId;
+
+    let castleDivIds: DivId[] = [];
+
+    //check castling left
+    if (leftRook && !pieceHasMoved(leftRook)) {
+        let boardIndicesBetween = [];
+        let currIdx = divIdToBoardIdx(leftRook as DivId) + 1;
+        while (currIdx < kingInfo.idx) {
+            boardIndicesBetween.push(currIdx);
+            currIdx++;
+        }
+        let hasPieceBetween = false;
+        boardIndicesBetween.forEach((idx: number) => {
+            if (board[idx]) {
+                hasPieceBetween = true;
+            }
+        });
+        if (!hasPieceBetween) {
+            let hasPieceAttacking = false;
+            let checkAttackIndices = [kingInfo.idx - 1, kingInfo.idx - 2];
+            checkAttackIndices.forEach((idx: number) => {
+                if (
+                    squareIsAttacked(board, boardIdxToId(idx) as DivId, player)
+                ) {
+                    hasPieceAttacking = true;
+                }
+            });
+
+            if (!hasPieceAttacking) {
+                castleDivIds.push(boardIdxToId(kingInfo.idx - 2) as DivId);
+            }
+        }
+    }
+
+    //check castling right
+    if (rightRook && !pieceHasMoved(rightRook)) {
+        let boardIndicesBetween = [];
+        let currIdx = divIdToBoardIdx(rightRook as DivId) - 1;
+        while (currIdx > kingInfo.idx) {
+            boardIndicesBetween.push(currIdx);
+            currIdx--;
+        }
+        let hasPieceBetween = false;
+        boardIndicesBetween.forEach((idx: number) => {
+            if (board[idx]) {
+                hasPieceBetween = true;
+            }
+        });
+        if (!hasPieceBetween) {
+            let hasPieceAttacking = false;
+            let checkAttackIndices = [kingInfo.idx + 1, kingInfo.idx + 2];
+            checkAttackIndices.forEach((idx: number) => {
+                if (
+                    squareIsAttacked(board, boardIdxToId(idx) as DivId, player)
+                ) {
+                    hasPieceAttacking = true;
+                }
+            });
+
+            if (!hasPieceAttacking) {
+                castleDivIds.push(boardIdxToId(kingInfo.idx + 2) as DivId);
+            }
+        }
+    }
+    return castleDivIds;
 };

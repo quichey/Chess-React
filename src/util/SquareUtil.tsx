@@ -78,7 +78,7 @@ export const getPlayersPieceDivIds = (player: Player) => {
 
     const pieceDivIds: PieceDivId[] = [];
     squareEls?.forEach((squareEl) => {
-        if (squareEl.children) {
+        if (squareEl.children.length > 0) {
             if (squareEl.children[0].id.includes(player)) {
                 pieceDivIds.push(squareEl.children[0].id as PieceDivId);
             }
