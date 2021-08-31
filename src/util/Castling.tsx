@@ -137,7 +137,9 @@ export const canCastle = (player: Player, board: any[]) => {
             });
 
             if (!hasPieceAttacking) {
-                castleDivIds.push(boardIdxToId(kingInfo.idx - 2) as DivId);
+                castleDivIds.push(
+                    boardIdxToId(kingInfo.idx - 2).slice(0, 3) as DivId
+                );
             }
         }
     }
@@ -168,7 +170,9 @@ export const canCastle = (player: Player, board: any[]) => {
             });
 
             if (!hasPieceAttacking) {
-                castleDivIds.push(boardIdxToId(kingInfo.idx + 2) as DivId);
+                castleDivIds.push(
+                    boardIdxToId(kingInfo.idx + 2).slice(0, 3) as DivId
+                );
             }
         }
     }

@@ -255,6 +255,34 @@ export const Board = ({ client }: BoardProps) => {
                         draggedPlayer
                     );
                 }
+                if (dragId.includes("King")) {
+                    let dropColl = Number(dropCell.charAt(2));
+                    let kingColl = Number(dragId.charAt(2));
+                    let kingRow = Number(dragId.charAt(0));
+                    if (Math.abs(dropColl - kingColl) === 2) {
+                        let castleLeft = kingColl > dropColl;
+                        let rookDivId = castleLeft
+                            ? `${kingRow}-0-${draggedPlayer}-Rook`
+                            : `${kingRow}-7-${draggedPlayer}-Rook`;
+                        let dropRookDivId = castleLeft
+                            ? `${kingRow}-${dropColl + 1}-square`
+                            : `${kingRow}-${dropColl - 1}-square`;
+
+                        let newRookSquareEl =
+                            document.getElementById(dropRookDivId);
+                        let rookEl = document.getElementById(rookDivId);
+                        let oldSquareDivId = castleLeft
+                            ? `${kingRow}-0-square`
+                            : `${kingRow}-7-square`;
+                        placePiece(
+                            newRookSquareEl,
+                            rookEl,
+                            dropRookDivId,
+                            oldSquareDivId,
+                            draggedPlayer
+                        );
+                    }
+                }
                 setCurrPlayer(getOppositePlayer(currPlayer));
                 if (client && !fromOther) {
                     var message = {
