@@ -44,6 +44,12 @@ export const boardIdxToId = (boardIdx: number) => {
     return cellToId(boardIdxToCell(boardIdx) as Cell);
 };
 
+export const boardIdxToPieceEl = (boardIdx: number) => {
+    let squareId = boardIdxToId(boardIdx);
+    let squareEl = document.getElementById(squareId);
+    return squareEl && squareEl.children.length > 0 && squareEl.children[0];
+};
+
 export const rowColToBoardIdx = (row: RowIdx, col: ColIdx) => {
     return row * 8 + col;
 };

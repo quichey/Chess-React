@@ -21,6 +21,7 @@ import {
     PieceType,
     boardIdxToId,
     Move,
+    boardIdxToPieceEl,
 } from "../util/SquareUtil";
 import { isCheckMate, isInCheck } from "../util/Check";
 import { getValidSquaresWithCheck } from "./pieces/Piece";
@@ -225,7 +226,10 @@ export const Board = ({ client }: BoardProps) => {
             fromOther?: boolean
         ) => {
             var dropCell = squareEl.id.slice(0, 3);
-            if (validSquares.includes(dropCell)) {
+            let validSquaresRowCol = validSquares.map((id) => {
+                return id.slice(0, 3);
+            });
+            if (validSquaresRowCol.includes(dropCell)) {
                 var pieceEl = document.getElementById(dragId);
                 var draggedPlayer = dragId.split("-")[2];
                 if (currPlayer !== draggedPlayer && !inAdminMode) {
@@ -235,7 +239,7 @@ export const Board = ({ client }: BoardProps) => {
                 if (enemyKilled) {
                     //var enemyParentDiv = squareEl.parentElement;
                     var enemyParentDiv = squareEl;
-                    killPiece(enemyKilled, enemyParentDiv.children[0].id);
+                    killPiece(enemyParentDiv.children[0].id);
                 }
                 placePiece(squareEl, pieceEl);
 
@@ -259,6 +263,19 @@ export const Board = ({ client }: BoardProps) => {
                         placePiece(newRookSquareEl, rookEl);
                     }
                 }
+
+                //do En Passant
+                if (
+                    validSquares
+                        .find((id) => {
+                            return id.includes(dropCell);
+                        })
+                        ?.includes("enpassant")
+                ) {
+                    let prevPawn =
+                        prevMove && boardIdxToPieceEl(prevMove.newBoardIdx);
+                    prevPawn && killPiece(prevPawn.id as PieceDivId);
+                }
                 setCurrPlayer(getOppositePlayer(currPlayer));
                 if (client && !fromOther) {
                     var message = {
@@ -270,14 +287,12 @@ export const Board = ({ client }: BoardProps) => {
                 }
             }
         },
-        [client, currPlayer, hasEnemyPiece, inAdminMode, placePiece]
+        [client, currPlayer, hasEnemyPiece, inAdminMode, placePiece, prevMove]
     );
 
-    const killPiece = (boardPieceId: BoardPieceId, pieceId: PieceDivId) => {
-        if (boardPieceId) {
-            const pieceEl = document.getElementById(pieceId);
-            pieceEl && pieceEl.remove();
-        }
+    const killPiece = (pieceId: PieceDivId) => {
+        const pieceEl = document.getElementById(pieceId);
+        pieceEl && pieceEl.remove();
     };
 
     React.useEffect(() => {

@@ -24,6 +24,7 @@ export const enPassantSquare = (
     if (pawnRow === moveRow && Math.abs(moveCol - pawnCol) === 1) {
         let enPassantBoardIdx =
             (prevMove.oldBoardIdx + prevMove.newBoardIdx) / 2;
-        return boardIdxToId(enPassantBoardIdx).slice(0, 3) as DivId;
+        return (boardIdxToId(enPassantBoardIdx).slice(0, 3) +
+            "-enpassant") as DivId;
     }
 };
