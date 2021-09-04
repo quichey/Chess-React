@@ -324,7 +324,7 @@ export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
 
     React.useEffect(() => {
         if (client) {
-            client.onmessage = (message: any) => {
+            client.addEventListener("message", (message: any) => {
                 console.log(message);
                 if (message.data) {
                     var movePieceParams =
@@ -343,7 +343,7 @@ export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
                         );
                     }
                 }
-            };
+            });
         }
     }, [client, movePiece]);
 

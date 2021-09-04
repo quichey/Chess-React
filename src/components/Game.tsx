@@ -30,10 +30,17 @@ export const Game = () => {
 
     React.useEffect(() => {
         if (client) {
-            client.onopen = (message: any) => {
+            client.onopen = () => {
                 console.log("WebSocket Client Connected");
                 setJoinOnlineSuccess(true);
             };
+            client.addEventListener("message", (message: any) => {
+                console.log(message);
+                if (message.data === "Other Player Joined") {
+                    setJoinOnlineSuccess(true);
+                    setRoom("Other Player Joined");
+                }
+            });
         }
     }, [client]);
 

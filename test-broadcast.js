@@ -40,6 +40,12 @@ wss.on("connection", (ws, req) => {
     ws.room = room;
     //send immediatly a feedback to the incoming connection
     ws.send(`Successfully joined room ${room}`);
+    //send back the message to the other clients
+    wss.clients.forEach((client) => {
+        if (client != ws && client.room == ws.room) {
+            client.send(`Other Player Joined`);
+        }
+    });
 });
 
 //start our server
