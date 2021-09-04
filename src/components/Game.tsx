@@ -5,11 +5,17 @@ import { Board } from "./Board";
 import { CustomizedDialogs } from "./dialogs/Dialog";
 import CRSnackBar from "./SnackBar/SnackBar";
 
-let url = "ws://localhost:8999";
-//url = "wss://protected-thicket-28480.herokuapp.com/:8999";
+let mode = "production";
+mode = "dev";
+let url =
+    mode === "production"
+        ? "wss://protected-thicket-28480.herokuapp.com/:8999"
+        : "ws://localhost:8999";
+let allowAdminMode = mode === "production" ? false : true;
 
 export const Game = () => {
     const [client, setClient] = React.useState<any>("");
+    const [inAdminMode, setInAdminMode] = React.useState(true);
 
     const [onlineGame, setOnlineGame] = React.useState(false);
     const [joinOnlineSuccess, setJoinOnlineSuccess] = React.useState(false);
@@ -47,6 +53,20 @@ export const Game = () => {
             >
                 Play Online
             </button>
+            {allowAdminMode ? (
+                <React.Fragment>
+                    <br />
+                    <button onClick={() => setInAdminMode(!inAdminMode)}>
+                        Toggle Admin Mode{" "}
+                    </button>
+                    {inAdminMode
+                        ? "In Admin Mode, can move any piece"
+                        : "Not in Admin mode, players must take turns"}
+                    <br />
+                </React.Fragment>
+            ) : (
+                ""
+            )}
             <div id="board-container">
                 <Board client={client} handleGameOver={handleGameOver} />
             </div>

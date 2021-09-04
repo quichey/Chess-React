@@ -49,11 +49,11 @@ export const components: any = {
 
 type BoardProps = {
     client: any;
+    inAdminMode?: boolean;
     handleGameOver?: () => void;
 };
 
-export const Board = ({ client, handleGameOver }: BoardProps) => {
-    const [inAdminMode, setInAdminMode] = React.useState(true);
+export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
     //const [pawnUpgradeComp, setPawnUpgradeComp] = React.useState<any>(null);
@@ -378,13 +378,6 @@ export const Board = ({ client, handleGameOver }: BoardProps) => {
         >
             <React.Fragment>
                 <div id="chess-board-container">
-                    <button onClick={() => setInAdminMode(!inAdminMode)}>
-                        Toggle Admin Mode{" "}
-                    </button>
-                    {inAdminMode
-                        ? "In Admin Mode, can move any piece"
-                        : "Not in Admin mode, players must take turns"}
-                    <br />
                     {`${currPlayer}'s turn`}
                     {isInCheck(currPlayer, board) ? (
                         <div>{currPlayer} IS IN CHECK</div>
