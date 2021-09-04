@@ -1,19 +1,19 @@
 import React from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-//import { boardIdxToPieceEl } from "../util/SquareUtil";
 
 import { Board } from "./Board";
 import { CustomizedDialogs } from "./dialogs/Dialog";
-//import { PawnUpgrade } from "./PawnUpgrade";
+import CRSnackBar from "./SnackBar/SnackBar";
 
 let url = "ws://localhost:8999";
-url = "wss://protected-thicket-28480.herokuapp.com/:8999";
-//const client = new W3CWebSocket("ws://localhost:8999");
+//url = "wss://protected-thicket-28480.herokuapp.com/:8999";
 
 export const Game = () => {
     const [client, setClient] = React.useState<any>("");
 
     const [onlineGame, setOnlineGame] = React.useState(false);
+    const [joinOnlineSuccess, setJoinOnlineSuccess] = React.useState(false);
+    const [room, setRoom] = React.useState("");
 
     const [newBoards, setNewBoards] = React.useState<any>([]);
     const [gameNumber, setGameNumber] = React.useState(1);
@@ -24,14 +24,10 @@ export const Game = () => {
 
     React.useEffect(() => {
         if (client) {
-            client.onopen = () => {
+            client.onopen = (message: any) => {
                 console.log("WebSocket Client Connected");
+                setJoinOnlineSuccess(true);
             };
-            /*
-            client.onmessage = (message: any) => {
-                console.log(message);
-            };
-            */
         }
     }, [client]);
 
@@ -84,12 +80,15 @@ export const Game = () => {
                 input
                 buttonText="Join Game"
                 onButtonClick={(inputValue) => {
+                    setRoom(inputValue);
                     setClient(new W3CWebSocket(`${url}?room=${inputValue}`));
                 }}
             />
-            {
-                //<PawnUpgrade player="White" />
-            }
+            <CRSnackBar
+                open={joinOnlineSuccess}
+                setOpen={setJoinOnlineSuccess}
+                message={`Joined Room: ${room}`}
+            />
         </React.Fragment>
     );
 };

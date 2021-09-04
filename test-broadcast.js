@@ -36,9 +36,10 @@ wss.on("connection", (ws, req) => {
         //ws.send(`Hello, you sent -> ${message}`);
     });
     console.log(req.url);
-    ws.room = req.url.split("room=").length > 0 && req.url.split("room=")[1];
+    let room = req.url.split("room=").length > 0 && req.url.split("room=")[1];
+    ws.room = room;
     //send immediatly a feedback to the incoming connection
-    ws.send("Hi there, I am a WebSocket server");
+    ws.send(`Successfully joined room ${room}`);
 });
 
 //start our server
