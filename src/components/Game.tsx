@@ -19,7 +19,7 @@ export const Game = () => {
 
     const [onlineGame, setOnlineGame] = React.useState(false);
     const [joinOnlineSuccess, setJoinOnlineSuccess] = React.useState(false);
-    const [room, setRoom] = React.useState("");
+    const [snackBarText, setSnackBarText] = React.useState("");
 
     const [newBoards, setNewBoards] = React.useState<any>([]);
     const [gameNumber, setGameNumber] = React.useState(1);
@@ -38,7 +38,7 @@ export const Game = () => {
                 console.log(message);
                 if (message.data === "Other Player Joined") {
                     setJoinOnlineSuccess(true);
-                    setRoom("Other Player Joined");
+                    setSnackBarText("Other Player Joined");
                 }
             });
         }
@@ -107,14 +107,14 @@ export const Game = () => {
                 input
                 buttonText="Join Game"
                 onButtonClick={(inputValue) => {
-                    setRoom(inputValue);
+                    setSnackBarText(`Joined Room: ${inputValue}`);
                     setClient(new W3CWebSocket(`${url}?room=${inputValue}`));
                 }}
             />
             <CRSnackBar
                 open={joinOnlineSuccess}
                 setOpen={setJoinOnlineSuccess}
-                message={`Joined Room: ${room}`}
+                message={snackBarText}
             />
         </React.Fragment>
     );
