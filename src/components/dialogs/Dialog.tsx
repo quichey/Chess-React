@@ -58,16 +58,23 @@ const DialogActions = withStyles((theme) => ({
 interface IDialogProps {
     open: boolean;
     setOpen: (open: boolean) => void;
+    title: string;
     text: string;
-    restartGame: () => void;
+    input?: boolean;
+    buttonText: string;
+    onButtonClick?: (inputValue: string) => void;
 }
 
 export const CustomizedDialogs = ({
     open,
     setOpen,
+    title,
     text,
-    restartGame,
+    input,
+    buttonText,
+    onButtonClick,
 }: IDialogProps) => {
+    const [inputValue, setInputValue] = React.useState("");
     /*
     const handleClickOpen = () => {
         setOpen(true);
@@ -75,7 +82,7 @@ export const CustomizedDialogs = ({
     */
     const handleClose = () => {
         setOpen(false);
-        restartGame();
+        onButtonClick && onButtonClick(inputValue);
     };
 
     return (
@@ -100,14 +107,22 @@ export const CustomizedDialogs = ({
                     onClose={handleClose}
                     classes={{}}
                 >
-                    Game Over
+                    {title}
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>{text}</Typography>
+                    {input ? (
+                        <input
+                            type="text"
+                            onChange={(e) => setInputValue(e.target.value)}
+                        />
+                    ) : (
+                        ""
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleClose} color="primary">
-                        Restart Game
+                        {buttonText}
                     </Button>
                 </DialogActions>
             </Dialog>

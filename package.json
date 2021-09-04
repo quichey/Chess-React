@@ -12,7 +12,8 @@
     "react-pixel-grid": "^0.1.2",
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2",
-    "websocket": "^1.0.34"
+    "websocket": "^1.0.34",
+    "wss": "^3.3.4"
   },
   "scripts": {
     "start": "react-scripts start",

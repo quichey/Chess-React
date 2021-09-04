@@ -1,8 +1,8 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const WebSocket = require('ws')
-const http = require('http')
+const express = require("express");
+const app = express();
+const port = 3000;
+const WebSocket = require("ws");
+const http = require("http");
 
 //initialize a simple http server
 const server = http.createServer(app);
@@ -10,13 +10,11 @@ const server = http.createServer(app);
 //initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', (ws) => {
-
+wss.on("connection", (ws, req) => {
     //connection is up, let's add a simple simple event
-    ws.on('message', (message) => {
-
-	//log the received message and send it back to the client
-        console.log('received: %s', message);
+    ws.on("message", (message) => {
+        //log the received message and send it back to the client
+        console.log("received: %s", message);
 
         const broadcastRegex = /^broadcast\:/;
 
@@ -24,13 +22,11 @@ wss.on('connection', (ws) => {
             //message = message.replace(broadcastRegex, '');
 
             //send back the message to the other clients
-            wss.clients
-                .forEach(client => {
-                    if (client != ws) {
-                        client.send(`Hello, broadcast message -> ${message}`);
-                    }    
-                });
-            
+            wss.clients.forEach((client) => {
+                if (client != ws && client.room == ws.room) {
+                    client.send(`Hello, broadcast message -> ${message}`);
+                }
+            });
         } else {
             ws.send(`Hello, you sent -> ${message}`);
         }
@@ -39,9 +35,10 @@ wss.on('connection', (ws) => {
         //console.log('received: %s', message);
         //ws.send(`Hello, you sent -> ${message}`);
     });
-
-    //send immediatly a feedback to the incoming connection    
-    ws.send('Hi there, I am a WebSocket server');
+    console.log(req.url);
+    ws.room = req.url.split("room=").length > 0 && req.url.split("room=")[1];
+    //send immediatly a feedback to the incoming connection
+    ws.send("Hi there, I am a WebSocket server");
 });
 
 //start our server
