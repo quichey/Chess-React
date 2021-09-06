@@ -36,6 +36,16 @@ export const cellToId = (cell: Cell) => {
     return `${cell[0]}-${cell[1]}-square`;
 };
 
+export const reverseId = (id: DivId) => {
+    const boardIdx = divIdToBoardIdx(id);
+    const reverseIdx = reverseBoardIdx(boardIdx);
+    return boardIdxToId(reverseIdx);
+};
+
+export const reverseBoardIdx = (boardIdx: number) => {
+    return 63 - boardIdx;
+};
+
 export const boardIdxToCell = (boardIdx: number) => {
     return [Math.floor(boardIdx / 8) as RowIdx, (boardIdx % 8) as ColIdx];
 };

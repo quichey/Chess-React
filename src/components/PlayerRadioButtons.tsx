@@ -7,16 +7,18 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { Player } from "../util/SquareUtil";
 
 interface IPlayerRadioButtons {
+    value: Player;
     onValueChange: (value: Player) => void;
 }
 
 export default function PlayerRadioButtons({
+    value,
     onValueChange,
 }: IPlayerRadioButtons) {
-    const [value, setValue] = React.useState("White");
+    //const [value, setValue] = React.useState("White");
 
     const handleChange = (event: any) => {
-        setValue(event.target.value);
+        //setValue(event.target.value);
         onValueChange(event.target.value);
     };
 

@@ -22,6 +22,7 @@ import {
     boardIdxToId,
     Move,
     boardIdxToPieceEl,
+    reverseId,
 } from "../util/SquareUtil";
 import { isCheckMate, isInCheck } from "../util/Check";
 import { getValidSquaresWithCheck } from "./pieces/Piece";
@@ -171,7 +172,7 @@ export const Board = ({
 
     const [board, setBoard] = React.useState(initialBoard);
     React.useEffect(() => {
-        setBoard(initialBoard);
+        setBoard(JSON.parse(JSON.stringify(initialBoard)));
     }, [player]);
 
     function allowDrop(ev: any) {
@@ -335,30 +336,57 @@ export const Board = ({
         }
     }, [showPawnUpgrade]);
 
+    const movePieceOnline = React.useCallback(
+        (message: any) => {
+            console.log(message);
+            if (message.data) {
+                var movePieceParams =
+                    message.data.split("broadcast:") &&
+                    message.data.split("broadcast:")[1];
+                movePieceParams = JSON.parse(movePieceParams);
+                if (movePieceParams) {
+                    if (movePieceParams.dragId.includes(player)) {
+                        return;
+                    }
+                    movePieceParams.squareEl = document.getElementById(
+                        reverseId(movePieceParams.squareElId)
+                    );
+                    let reverseDragPre = reverseId(
+                        movePieceParams.dragId
+                    ).split("-square")[0];
+                    let dragIdSuff = movePieceParams.dragId
+                        .split("-")
+                        .slice(2)
+                        .join("-");
+                    movePiece(
+                        movePieceParams.squareEl,
+                        (reverseDragPre + "-" + dragIdSuff) as PieceDivId,
+                        movePieceParams.validSquares.map(
+                            (validSquare: DivId) => {
+                                let reversePre =
+                                    reverseId(validSquare).split("-square")[0];
+                                let suff = validSquare
+                                    .split("-")
+                                    .slice(2)
+                                    .join("-");
+                                return suff
+                                    ? reversePre + "-" + suff
+                                    : reversePre;
+                            }
+                        ),
+                        true
+                    );
+                }
+            }
+        },
+        [movePiece]
+    );
+
     React.useEffect(() => {
         if (client) {
-            client.addEventListener("message", (message: any) => {
-                console.log(message);
-                if (message.data) {
-                    var movePieceParams =
-                        message.data.split("broadcast:") &&
-                        message.data.split("broadcast:")[1];
-                    movePieceParams = JSON.parse(movePieceParams);
-                    if (movePieceParams) {
-                        movePieceParams.squareEl = document.getElementById(
-                            movePieceParams.squareElId
-                        );
-                        movePiece(
-                            movePieceParams.squareEl,
-                            movePieceParams.dragId,
-                            movePieceParams.validSquares,
-                            true
-                        );
-                    }
-                }
-            });
+            client.addEventListener("message", movePieceOnline);
         }
-    }, [client, movePiece]);
+    }, [client, movePieceOnline]);
 
     React.useEffect(() => {
         if (upgradedPieces.length > 0) {
