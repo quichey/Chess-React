@@ -107,12 +107,18 @@ export const Board = ({
                 boardPieceId = { piece: "Pawn", player: color };
             } else if (idx === 0 || idx === 7) {
                 //set pieces in first and last rows
-                if (idx2 === 4) {
+                if (
+                    (idx2 === 4 && player === "White") ||
+                    (idx2 === 3 && player === "Black")
+                ) {
                     pieceId += "-King";
                     piece = <King pieceId={pieceId} />;
                     boardPieceId = { piece: "King", player: color };
                 }
-                if (idx2 === 3) {
+                if (
+                    (idx2 === 3 && player === "White") ||
+                    (idx2 === 4 && player === "Black")
+                ) {
                     pieceId += "-Queen";
                     piece = <Queen pieceId={pieceId} />;
                     boardPieceId = { piece: "Queen", player: color };
