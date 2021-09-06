@@ -8,7 +8,7 @@ import PlayerRadioButtons from "./PlayerRadioButtons";
 import { Player } from "../util/SquareUtil";
 
 let mode = "production";
-//mode = "dev";
+mode = "dev";
 let url =
     mode === "production"
         ? "wss://protected-thicket-28480.herokuapp.com/:8999"
@@ -43,6 +43,9 @@ export const Game = () => {
                 if (message.data === "Other Player Joined") {
                     setJoinOnlineSuccess(true);
                     setSnackBarText("Other Player Joined");
+                }
+                if (message.data === "You are Black") {
+                    setPlayer("Black");
                 }
             });
         }

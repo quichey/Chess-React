@@ -44,6 +44,7 @@ wss.on("connection", (ws, req) => {
     wss.clients.forEach((client) => {
         if (client != ws && client.room == ws.room) {
             client.send(`Other Player Joined`);
+            ws.send("You are Black");
         }
     });
 });
