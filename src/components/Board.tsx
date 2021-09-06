@@ -247,7 +247,10 @@ export const Board = ({
             if (validSquaresRowCol.includes(dropCell)) {
                 var pieceEl = document.getElementById(dragId);
                 var draggedPlayer = dragId.split("-")[2];
-                if (currPlayer !== draggedPlayer && !inAdminMode) {
+                if (
+                    (currPlayer !== draggedPlayer && !inAdminMode) ||
+                    (client && currPlayer !== player && !fromOther)
+                ) {
                     return;
                 }
                 var enemyKilled = hasEnemyPiece(dragId, dropCell);
