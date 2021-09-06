@@ -5,6 +5,7 @@ import { Board } from "./Board";
 import { CustomizedDialogs } from "./dialogs/Dialog";
 import CRSnackBar from "./SnackBar/SnackBar";
 import PlayerRadioButtons from "./PlayerRadioButtons";
+import { Player } from "../util/SquareUtil";
 
 let mode = "production";
 //mode = "dev";
@@ -18,7 +19,7 @@ export const Game = () => {
     const [client, setClient] = React.useState<any>("");
     const [inAdminMode, setInAdminMode] = React.useState(true);
 
-    const [player, setPlayer] = React.useState("White");
+    const [player, setPlayer] = React.useState<Player>("White");
 
     const [onlineGame, setOnlineGame] = React.useState(false);
     const [joinOnlineSuccess, setJoinOnlineSuccess] = React.useState(false);
@@ -84,7 +85,11 @@ export const Game = () => {
                 ""
             )}
             <div id="board-container">
-                <Board client={client} handleGameOver={handleGameOver} />
+                <Board
+                    player={player}
+                    client={client}
+                    handleGameOver={handleGameOver}
+                />
             </div>
             <div id="new-board-container">{newBoards}</div>
             <CustomizedDialogs
@@ -97,6 +102,7 @@ export const Game = () => {
                     document.getElementById("chess-board-container")?.remove();
                     newBoards.push(
                         <Board
+                            player={player}
                             key={newBoards.length}
                             client={client}
                             handleGameOver={() => setGameOver(true)}

@@ -27,7 +27,7 @@ export const getValidSquaresPawn = (
     prevMove?: Move
 ) => {
     const origRow = pieceId && Number(pieceId.split("-")[0]);
-    var direction = player === "White" ? -1 : 1;
+    var direction = origRow === 6 ? -1 : 1;
     var validSquares: DivId[] = [];
     var nextRow = (row + direction) as RowIdx;
     var hasAPiece = hasAnyPiece(nextRow, col, board);

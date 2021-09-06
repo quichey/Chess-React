@@ -48,12 +48,18 @@ export const components: any = {
 };
 
 type BoardProps = {
+    player: Player;
     client: any;
     inAdminMode?: boolean;
     handleGameOver?: () => void;
 };
 
-export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
+export const Board = ({
+    player,
+    client,
+    inAdminMode,
+    handleGameOver,
+}: BoardProps) => {
     const [checkMate, setCheckMate] = React.useState(false);
     const [showPawnUpgrade, setShowPawnUpgrade] = React.useState<any>(false);
     //const [pawnUpgradeComp, setPawnUpgradeComp] = React.useState<any>(null);
@@ -87,7 +93,11 @@ export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
     row.forEach((el, idx) => {
         col.forEach((el2, idx2) => {
             let piece: JSX.Element | "" = "";
-            let color: "White" | "Black" = idx > 3 ? "White" : "Black";
+            let color: "White" | "Black" =
+                (idx > 3 && player === "White") ||
+                (idx <= 3 && player === "Black")
+                    ? "White"
+                    : "Black";
             var pieceId = `${idx}-${idx2}-${color}`;
             let boardPieceId: BoardPieceId = "";
             if (idx === 1 || idx === 6) {
@@ -160,6 +170,9 @@ export const Board = ({ client, inAdminMode, handleGameOver }: BoardProps) => {
     });
 
     const [board, setBoard] = React.useState(initialBoard);
+    React.useEffect(() => {
+        setBoard(initialBoard);
+    }, [player]);
 
     function allowDrop(ev: any) {
         ev.preventDefault();
