@@ -4,9 +4,10 @@ import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { Board } from "./Board";
 import { CustomizedDialogs } from "./dialogs/Dialog";
 import CRSnackBar from "./SnackBar/SnackBar";
+import PlayerRadioButtons from "./PlayerRadioButtons";
 
 let mode = "production";
-mode = "dev";
+//mode = "dev";
 let url =
     mode === "production"
         ? "wss://protected-thicket-28480.herokuapp.com/:8999"
@@ -16,6 +17,8 @@ let allowAdminMode = mode === "production" ? false : true;
 export const Game = () => {
     const [client, setClient] = React.useState<any>("");
     const [inAdminMode, setInAdminMode] = React.useState(true);
+
+    const [player, setPlayer] = React.useState("White");
 
     const [onlineGame, setOnlineGame] = React.useState(false);
     const [joinOnlineSuccess, setJoinOnlineSuccess] = React.useState(false);
@@ -51,6 +54,10 @@ export const Game = () => {
             board && boardContainer?.appendChild(board);
         }
     }, [newBoards, gameNumber]);
+
+    React.useEffect(() => {
+        console.log(player);
+    }, [player]);
     return (
         <React.Fragment>
             <button
@@ -60,6 +67,8 @@ export const Game = () => {
             >
                 Play Online
             </button>
+            <br />
+            <PlayerRadioButtons onValueChange={setPlayer} />
             {allowAdminMode ? (
                 <React.Fragment>
                     <br />
