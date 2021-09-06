@@ -106,12 +106,12 @@ export const Board = ({
                 boardPieceId = { piece: "Pawn", player: color };
             } else if (idx === 0 || idx === 7) {
                 //set pieces in first and last rows
-                if (idx2 === 3) {
+                if (idx2 === 4) {
                     pieceId += "-King";
                     piece = <King pieceId={pieceId} />;
                     boardPieceId = { piece: "King", player: color };
                 }
-                if (idx2 === 4) {
+                if (idx2 === 3) {
                     pieceId += "-Queen";
                     piece = <Queen pieceId={pieceId} />;
                     boardPieceId = { piece: "Queen", player: color };
@@ -122,14 +122,14 @@ export const Board = ({
                     boardPieceId = { piece: "Rook", player: color };
                 }
                 if (idx2 === 1 || idx2 === 6) {
-                    pieceId += "-Bishop";
-                    piece = <Bishop pieceId={pieceId} />;
-                    boardPieceId = { piece: "Bishop", player: color };
-                }
-                if (idx2 === 2 || idx2 === 5) {
                     pieceId += "-Knight";
                     piece = <Knight pieceId={pieceId} />;
                     boardPieceId = { piece: "Knight", player: color };
+                }
+                if (idx2 === 2 || idx2 === 5) {
+                    pieceId += "-Bishop";
+                    piece = <Bishop pieceId={pieceId} />;
+                    boardPieceId = { piece: "Bishop", player: color };
                 }
             }
             divs.push(
@@ -139,7 +139,7 @@ export const Board = ({
                     style={{
                         ...boxCss,
                         backgroundColor:
-                            (idx + idx2) % 2 === 1 ? "#ffe4b5" : "#8b4513",
+                            (idx + idx2) % 2 === 1 ? "#8b4513" : "#ffe4b5",
                     }}
                     onDrop={drop}
                     onDragOver={allowDrop}
