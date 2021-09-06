@@ -71,8 +71,18 @@ export const Game = () => {
             >
                 Play Online
             </button>
-            <br />
-            <PlayerRadioButtons value={player} onValueChange={setPlayer} />
+            {!client ? (
+                <React.Fragment>
+                    <br />
+                    <PlayerRadioButtons
+                        value={player}
+                        onValueChange={setPlayer}
+                    />
+                </React.Fragment>
+            ) : (
+                ""
+            )}
+
             {allowAdminMode ? (
                 <React.Fragment>
                     <br />
